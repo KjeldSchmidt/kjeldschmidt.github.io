@@ -10,8 +10,8 @@ Let's get to the point:
 - I think you should have a `do`-script in your project
 - I'll explain what that even is and why I think you should have one
 - The only reason I'm writing about it is that I can't find any sources online
-- This might be because the term "`do`-script" is incredibly bad to search for. 
-- I'm not gonna change that.
+- This might be because the term "`do`-script" is incredibly generic and hard to google.
+- I'm not gonna try to find a more marketable term. You're already here.
 - There's a lot of "why" coming up. If you're future me and just need the code, scroll to the bottom.
 
 Alright, a definition:
