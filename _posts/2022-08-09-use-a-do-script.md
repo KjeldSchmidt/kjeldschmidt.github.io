@@ -58,7 +58,7 @@ First, documentation - it encourages you to put knowledge that exists in your he
 This means that people will actually _use_ this code, which means people will notice if things become outdates and they'll update them.
 We all known very well that this would not be the case for non-executable documentation.
 
-Second, discoverability - it allows new team members to easily discover what things are important and which are not. Gradle tasks, for example, do something similar: there is a list of actions that can be taken through Gradle for a given project. But in my experience, those are often overwhelming. Applying a single gradle plugin often introduces a handful of commands, only one of which is actually relevant for the project. How are we gonna figure out whether we want to use `SpotlessApply` or `SpotlessJavaApply` or whatever?
+Second, discoverability - it allows new team members to easily discover what things are important and which are not. Gradle tasks, for example, do something similar: there is a list of actions that can be taken through Gradle for a given project. But in my experience, those are often overwhelming. Applying a single gradle plugin often introduces a handful of commands, only one of which is actually relevant for the project. How are we gonna figure out whether we want to use `./gradlew SpotlessApply` or `./gradlew SpotlessJavaApply` or whatever else?
 
 Well, if we have a `do`-script, we can know that there is _one_ command to format, and just use it. If we ever care about details, we can look at the source, or we can just not. No need to ask someone whose more experienced on the project (not that I want to discourage communication - I want to encourage talking about team practices, project context and business details, not how to invoke the damn formatter)
 
@@ -75,7 +75,7 @@ There are a bunch of different CI/CD systems with a bunch of different ways to p
 
 ## Be pragmatic
 
-The `do`-script is supposed to be a living document, a testament to the ways the project is being used. Change it when needed, ignore edge-cases when they seem to complicated, have several, in subfolders, if you want. Don't make it the subject of business requirements.
+The `do`-script is supposed to be a living document, a testament to the ways the project is being used. Change it when needed, ignore edge-cases when they seem too complicated, have several `do`-scripts in subfolders. Don't make it the subject of business requirements.
 
 Also, call it `do`, not `do.sh`. Solely and exclusively because it's faster to type. For the same reason, the tasks in our above example was called "fmt-check", not "format_check".
 
