@@ -56,12 +56,12 @@ And at this point in time, I don't have to care about what exact command to invo
 The power of the `do`-script is threefold.
 
 First, documentation - it encourages you to put knowledge that exists in your head or in non-executable documentation into an executable context.
-This means that people will actually _use_ this code, which means people will notice if things become outdates and they'll update them.
+This means that people will actually _use_ this code, which means people will notice if things become outdated and they'll update them.
 We all known very well that this would not be the case for non-executable documentation.
 
 Second, discoverability - it allows new team members to easily discover what things are important and which are not. Gradle tasks, for example, do something similar: there is a list of actions that can be taken through Gradle for a given project. But in my experience, those are often overwhelming. Applying a single gradle plugin often introduces a handful of commands, only one of which is actually relevant for the project. How are we gonna figure out whether we want to use `./gradlew SpotlessApply` or `./gradlew SpotlessJavaApply` or whatever else?
 
-Well, if we have a `do`-script, we can know that there is _one_ command to format, and just use it. If we ever care about details, we can look at the source, or we can just not. No need to ask someone whose more experienced on the project (not that I want to discourage communication - I want to encourage talking about team practices, project context and business details, not how to invoke the damn formatter)
+Well, if we have a `do`-script, we can know that there is _one_ command to format, and just use it. If we ever care about details, we can look at the source, or we can just not. No need to ask someone who's more experienced on the project (not that I want to discourage communication - I want to encourage talking about team practices, project context and business details, not how to invoke the damn formatter)
 
 And third, maintainability. Does the build process rely on some specific IDE setup? This can be fine in some cases, but for a long-lived project, you probably don't want to get tied to specific IDEs or even specific versions. If you have a shell-driven process, you remove a lot of dependencies. Even better if the script itself takes care to install all dependencies that _are_ still needed.
 
