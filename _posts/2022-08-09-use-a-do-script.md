@@ -11,6 +11,7 @@ Let's get to the point:
 - I'll explain what that even is and why I think you should have one
 - The only reason I'm writing about it is that I can't find any sources online
 - This might be because the term "`do`-script" is incredibly generic and hard to google.
+- It might also be because the concept isn't all that popular, or generally known under a different name.
 - I'm not gonna try to find a more marketable term. You're already here.
 - There's a lot of "why" coming up. If you're future me and just need the code, scroll to the bottom.
 
