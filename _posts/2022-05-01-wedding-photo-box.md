@@ -5,7 +5,7 @@ categories: [Woodworking]
 tags: [woodworking, laser engraving, laser, creative]
 ---
 
-![The side of the box showing the bride and groom](/assets/photobox-in-context.jpg)
+![The side of the box showing the bride and groom](/assets/images/photobox-in-context.jpg)
 
 Photobox for the wedding of my sister.
 
@@ -15,13 +15,13 @@ These side-panels came with hooks pre-installed for easy installation on the wal
 The main body of the box is made from bamboo, the legs are made from Acacia scrap.
 The images are laser-engraved, making them highly scratch-resistant.
 
-![The side of the box showing the bride and groom](/assets/photobox-rings.jpg)
+![The side of the box showing the bride and groom](/assets/images/photobox-rings.jpg)
 
 At this point, I am still not entirely happy with my process for converting faces to laser-engravings.
 While my process, consisting of isolating image components in Photoshop, then converting each component into
 paths individually via Lightburn, works great on many things, it still frequently creates somewhat, frankly speaking, scary, faces.
 
-![The side of the box showing the bride and groom](/assets/photobox-face.jpg)
+![The side of the box showing the bride and groom](/assets/images/photobox-face.jpg)
 
 The camera on the inside was WiFi-controlled, using an old phone as a preview and trigger.
 
