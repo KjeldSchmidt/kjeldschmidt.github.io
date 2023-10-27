@@ -21,7 +21,7 @@ timezone: Europe/Berlin
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Kjeld Schmidt                          # the main title
+title: Kjeld Schmidt
 
 tagline: A log of random exploits in software development and DIY.     # it will display as the sub-title
 
@@ -34,10 +34,6 @@ url: 'https://kjeld-schmidt.com'
 github:
   username: KjeldSchmidt
 
-linkedin:
-  username: kjeld-schmidt
-
-
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
@@ -45,10 +41,7 @@ social:
   email: contact@kjeld-schmidt.com             # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    # - https://twitter.com/username      # change to your twitter homepage
-    - https://github.com/kjeldschmidt       # change to your github homepage
-    # Uncomment below to add more social links
-    # - https://www.facebook.com/username
+    - https://github.com/kjeldschmidt
     - https://www.linkedin.com/in/kjeld-schmidt/
 
 google_site_verification:               # fill in to your verification string
