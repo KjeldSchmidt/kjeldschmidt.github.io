@@ -54,33 +54,60 @@ A simple dotted pattern, created by `<----[>+>>>>>>>>V++++]>-`
 
 ![A pattern of diagonal colored lines](/assets/images/paintfuck/demo-1.png)
 Diagonal colored stripes, intentionally finite, created by
+
 ```VVVV>+++++++[<++++++++>-]<[>>>+++++++[<++++++++>-]^[V+^-]V+[[>]<[->+>+<<]>>[-<<+>>]<+[<]>-]<<-[-V+^]V]```
 
 ![Three simple colored lines, vertical, horizontal, diagonal](/assets/images/paintfuck/demo-2.png)
 Simple lines, mostly showing off how to "fill" a complete line.
+
 ```VVVV--[>+]++V>>>>^^^^-----[V+]---<<<<^-[>V+]+```
 
 ![A patterned mess of colors](/assets/images/paintfuck/demo-3.png)
 Hey, this kinda looks like the pattern on a bus seat from the 90's.
+
 ```+++[>>>+++++++[<++++++++>-]<[[>]<[->+>][<]>-]<<-[-V+^]V]```
 
 ![A face with angry eyebrows](/assets/images/paintfuck/demo-4.png)
 A simple face, disappointed by the lack of detail and care taken in the drawing of itself.
-```VVVVVVVVVVVVVVVVVV>>>>>>>>>VV++++++++++++[>+>+<<-]>>[[>]+[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]+[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]+[<]>-]>[>]^+[^+<[>-]>]>>>>>>>>>>>>>>VVV++++++++++++[>+>+<<-]>>[[>]+[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]+[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]+[<]>-]>[>]^+[^+<[>-]>]>>>++++++++[-[^+V-]^]<<<++++++++++++[--<+<+>>[V<<+>>^-]<<V]<<<<<<<<<<<<<<<<<<<^^^^++++++++++++[--<+<+>>[^<<+>>V-]<<^]<<<<<<+++++++[>++++++<-]>[-[V+^-]V]>>>++++++[<++++++++>-]<-[[>]+[<]>-]```![A face with angry eyebrows](/assets/images/paintfuck/demo-5.png)
+
+```
+VVVVVVVVVVVVVVVVVVVV>>>>>>>>>
+++++++++++++[>+>+<<-]>>[[>]+[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]+[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]+[<]>-]>[>]^+[^+<[>-]>]
+>>>>>>>>>>>>>>VVV
+++++++++++++[>+>+<<-]>>[[>]+[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]+[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]+[<]>-]>[>]^+[^+<[>-]>]
+>>>++++++++[-[^+V-]^]
+<<<++++++++++++[--<+<+>>[V<<+>>^-]<<V]
+<<<<<<<<<<<<<<<<<<<^^^^
+++++++++++++[--<+<+>>[^<<+>>V-]<<^]
+<<<<<<+++++++[>++++++<-]>[-[V+^-]V]
+>>>++++++[<++++++++>-]<-[[>]+[<]>-]
+```
 
 ![Three empty rectangle of different sizes](/assets/images/paintfuck/demo-5.png)
 Three boxes, showing off the 'rounded rectangle' function
-```++++++[>+>+<<-]>>[[>]++++++[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]++++++[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]++++++[<]>-]>[>]^+[^+<[>-]>]>>>VVV+++++++++[>+>+<<-]>>[[>]++[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]++[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]++[<]>-]>[>]^+[^+<[>-]>]>>>>>VVVVV+++++++++++++[>+>+<<-]>>[[>]++++[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]++++[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]++++[<]>-]>[>]^+[^+<[>-]>]```![Three empty rectangle of different sizes](/assets/images/paintfuck/demo-5.png)
+
+```++++++[>+>+<<-]>>[[>]++++++[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]++++++[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]++++++[<]>-]>[>]^+[^+<[>-]>]>>>VVV+++++++++[>+>+<<-]>>[[>]++[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]++[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]++[<]>-]>[>]^+[^+<[>-]>]>>>>>VVVVV+++++++++++++[>+>+<<-]>>[[>]++++[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]++++[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]++++[<]>-]>[>]^+[^+<[>-]>]```
 
 ![Another mess of colors](/assets/images/paintfuck/demo-6.png)
 Another colored mess, except I created this one with intent. If the timelapse
 function were properly implemented, it would look really cool to watch this grow.
+
 ```>>>>>+<<<<<<-[-[>-<+>]+V>+V>+V<[>-<+>]+V<+V<+]```
 
 ![Thick rectangles of color](/assets/images/paintfuck/demo-7.png)
 Technical issues, please hold. The code for this could definitely be shortened,
 by seeding the color for each row first and then copying that into a full line.
-```VVVV>++++++++[>>>+++++++[<++++++++>-]<-[[>]+[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]++[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]+++[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]++++[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]+++++[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]++++++[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]+++++++[<]>-]<<-[-V+^]V]```
+
+```
+VVVV
+++++++++[>>>+++++++[<++++++++>-]<-[[>]+[<]>-]<<-[-V+^]V]
+++++++++[>>>+++++++[<++++++++>-]<-[[>]++[<]>-]<<-[-V+^]V]
+++++++++[>>>+++++++[<++++++++>-]<-[[>]+++[<]>-]<<-[-V+^]V]
+++++++++[>>>+++++++[<++++++++>-]<-[[>]++++[<]>-]<<-[-V+^]V]
+++++++++[>>>+++++++[<++++++++>-]<-[[>]+++++[<]>-]<<-[-V+^]V]
+++++++++[>>>+++++++[<++++++++>-]<-[[>]++++++[<]>-]<<-[-V+^]V]
+++++++++[>>>+++++++[<++++++++>-]<-[[>]+++++++[<]>-]<<-[-V+^]V]
+```
 
 
 ## Potential Improvements
@@ -108,6 +135,9 @@ expose the entire GridTape state on demand?
 
 Versions of CRF[] created after my fork also include the `?` command, which
 outputs a lot of helpful information right on page. I might want to steal that.
+
+Technically, there's no reason to not allow inline comments by ignoring all
+non-instructional input.
 
 ### Image (and video?) export
 
