@@ -1,13 +1,13 @@
 ---
 title: Fetlang is turing complete
 date: 2017-10-11 00:00:00 +0000
-categories: [computer science, quick build]
+categories: [computer science, quick build, esolang]
 tags: [humor, computer science, turing complete]
 ---
 
 Recently, the esoteric programming language Fetlang was linked and discussed
 on /r/programming. On the
-[project's Github page](https://github.com/fetlang/fetlang) I noticed something
+[project's GitHub page](https://github.com/fetlang/fetlang) I noticed something
 in its list of features:
 
 > Probably Turing complete
