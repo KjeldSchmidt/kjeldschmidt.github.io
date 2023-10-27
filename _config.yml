@@ -32,10 +32,11 @@ description: >-                        # used by seo meta and the atom feed
 url: 'https://kjeld-schmidt.com'
 
 github:
-  username: KjeldSchmidt             # change to your github username
+  username: KjeldSchmidt
 
-twitter:
-  username: schmidt_kjeld            # change to your twitter username
+linkedin:
+  username: kjeld-schmidt
+
 
 social:
   # Change to your full name.
@@ -48,7 +49,7 @@ social:
     - https://github.com/kjeldschmidt       # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
-    # - https://www.linkedin.com/in/username
+    - https://www.linkedin.com/in/kjeld-schmidt/
 
 google_site_verification:               # fill in to your verification string
 
