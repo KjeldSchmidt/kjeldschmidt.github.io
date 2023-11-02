@@ -147,7 +147,7 @@ not combine it with the animation mentioned in the previous section and
 directly offer a download of the animation of the image being drawn?
 
 
-### Optimisation
+### Optimization
 
 In theory, repeated position shifts and additions can easily be 'grouped' for
 a quick win in the performance department. This will probably not be necessary
