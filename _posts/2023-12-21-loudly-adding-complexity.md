@@ -44,8 +44,8 @@ inevitably lead to questions - "why do we do the same thing in two different
 ways? what's the pattern here? who do I have to ask? is our config secretly
 borked due to conflicts in the approaches?" - all while not leaving a morsel of
 documentation or communication behind which would allow other team members to
-find answers, other than to use the poorly names`git blame` on the unusual piece
-of code.
+find answers, other than to use the poorly named `git blame` on the unusual
+piece of code.
 
 And that's the lesson: a good leader shouldn't quietly increase complexity. If
 you do something in secret, you better be confident that it _reduces_ mental
