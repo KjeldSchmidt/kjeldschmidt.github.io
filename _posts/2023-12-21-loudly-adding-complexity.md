@@ -52,9 +52,6 @@ you do something in secret, you better be confident that it _reduces_ mental
 overhead for everyone, rather than increasing it. And if you _increase_
 complexity, you better be loud about it.
 
-[^config-not-code]: A configuration thing, which all of our repository handle in \
-a single file in the root directory. The dev in question made some config \
-changes inline instead, even though they knew the established pattern.
+[^config-not-code]: A configuration thing, which all of our repository handle in a single file in the root directory. The dev in question made some config changes inline instead, even though they knew the established pattern.
 
-[^reversible]: And all of these changes were easily reversible if any of us \
-_had_ complained.
+[^reversible]: And all of these changes were easily reversible if any of us _had_ complained.
