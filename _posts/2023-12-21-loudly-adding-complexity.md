@@ -5,10 +5,10 @@ categories: [Software Development]
 tags: [software development, leadership]
 ---
 
-I just had a split-second thought that something done by a fellow developer in a
-team was "the exact opposite of leadership", based on them changing an
-established pattern[^config-not-code], and doing so quietly, without asking the
-team before or telling the team after.
+Once upon a time, I had a split-second thought that something done by a fellow
+developer in a team was "the exact opposite of leadership", based on them
+changing an established pattern[^config-not-code], and doing so quietly, without
+asking the team before or telling the team after.
 
 I wanted to explore that thought - was it just a fleeting moment of annoyance or
 was there some deeper insight in there? With the word "leadership" lodged in my
