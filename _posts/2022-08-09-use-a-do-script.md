@@ -99,6 +99,13 @@ function internal_helper_function {
 
 #-------- All task definitions go above this line --------#
 
+# Bash Strict Mode - For details, see
+# https://gist.github.com/mohanpedala/1e2ff5661761d3abd0385e8223e16425
+set -u     # Raise error when using undefined variables
+set -e     # Raise error if any command has a non-zero exit status
+# set -x   # Enable this optionally to print every command executed by bash
+set -o pipefail  # Prevent pipelines from masking errors
+
 function task_usage {
     echo "Usage: $0"
     sed -n 's/^##//p' <"$0" | column -t -s ':' |  sed -E $'s/^/\t/'
