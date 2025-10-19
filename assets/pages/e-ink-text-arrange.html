@@ -708,7 +708,6 @@
                 </div>
 
                 <div class="button-group">
-                    <button class="btn btn-success" id="exportBtn" style="width: 100%;">📸 Send to Display</button>
                     <button class="btn btn-secondary" id="downloadBtn" style="width: 100%;">💾 Download PNG</button>
                 </div>
 
@@ -1039,7 +1038,6 @@
             
             
             $('#randomizeBtn').on('click', randomizeDesign);
-            $('#exportBtn').on('click', sendToDisplay);
             $('#downloadBtn').on('click', downloadPNG);
             
             
@@ -1504,47 +1502,6 @@
             });
         }
 
-        function sendToDisplay() {
-            const exportBtn = document.getElementById('exportBtn');
-            
-            // Show loading state
-            exportBtn.textContent = '⏳ Sending...';
-            exportBtn.disabled = true;
-            
-            // Generate image with device colors
-            generateImage(true).then(function(canvas) {
-                // Convert canvas to blob and send to server
-                canvas.toBlob(function(blob) {
-                    const formData = new FormData();
-                    formData.append('file', blob, 'typography-layout.png');
-                    
-                    fetch('/display/upload', {
-                        method: 'POST',
-                        body: formData
-                    }).then(function(response) {
-                        if (response.ok) {
-                            exportBtn.textContent = '✅ Sent to Display!';
-                            setTimeout(() => {
-                                exportBtn.textContent = '📸 Send to Display';
-                                exportBtn.disabled = false;
-                            }, 2000);
-                        } else {
-                            throw new Error('Failed to send image to display');
-                        }
-                    }).catch(function(error) {
-                        console.error('Failed to send image:', error);
-                        alert('Failed to send image to display. Please try again.');
-                        exportBtn.textContent = '📸 Send to Display';
-                        exportBtn.disabled = false;
-                    });
-                }, 'image/png');
-            }).catch(function(error) {
-                console.error('Failed to generate image:', error);
-                exportBtn.textContent = '📸 Send to Display';
-                exportBtn.disabled = false;
-            });
-        }
-
         function downloadPNG() {
             const downloadBtn = document.getElementById('downloadBtn');
             
@@ -1569,5 +1526,10 @@
             });
         }
     </script>
+    <footer>
+        <a href="https://github.com/KjeldSchmidt/kjeldschmidt.github.io/blob/main/assets/pages/e-ink-text-arrange.html">Source Code</a>
+        <a href="https://kjeld-schmidt.com">Kjeld Schmidt</a>
+        <a href="https://github.com/KjeldSchmidt/kjeldschmidt.github.io/blob/main/LICENSE">License</a>
+    </footer>
 </body>
 </html>

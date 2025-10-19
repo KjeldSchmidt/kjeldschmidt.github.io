@@ -1,21 +1,11 @@
-MIT License
+# Licensing
 
-Copyright (c) 2017-2025 Kjeld Schmidt
+## Code
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+All code in this repository — including build scripts, configuration, and templates — is licensed under the [MIT License](LICENSE-MIT).
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This includes and satisfies the original licensing terms of the Jekyll theme/template on which this site is based.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Content
+
+All original written content, images, and other creative works in the `_posts`, `_pages`, and `assets` directories are licensed under the [Creative Commons Attribution 4.0 International License](LICENSE-CC-BY-4.0).
