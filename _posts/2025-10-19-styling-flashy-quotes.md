@@ -1,5 +1,5 @@
 ---
-title: "Styling Flashy Quotes"
+title: "Styling Flashy Quotes for an E-Ink Screen"
 date: 2025-10-19 00:00:00 +0000
 categories: [creative, programming, design]
 tags: [creative, hardware, decorative, recreational, e-ink, raspberry-pi]
