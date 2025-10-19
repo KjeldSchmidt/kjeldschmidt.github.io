@@ -1,0 +1,540 @@
+<!--
+  Copyright (c) 2023 Kjeld Schmidt
+  Source: https://github.com/KjeldSchmidt/Paintfuck
+  License: MIT
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Paintfuck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Brainfuck, on a canvas">
+    <style>
+        body {
+            background: #111;
+            margin: 0;
+        }
+
+        canvas, pre, input, button {
+            background: #000;
+            box-sizing: border-box;
+            border: 1px solid #333;
+        }
+
+        canvas, pre, input {
+            display: block;
+            margin: 0 auto;
+        }
+
+        pre, input, button, a {
+            font-family: monospace, monospace;
+            font-size: 1em;
+            color: #999;
+        }
+
+        pre, input {
+            padding-left: 8px;
+        }
+
+        canvas {
+            image-rendering: pixelated;
+        }
+
+        pre {
+            overflow: auto;
+        }
+
+        input {
+            color: #ccc;
+            border-color: #666;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        button {
+            color: #999;
+            font-weight: bold;
+            vertical-align: middle;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        button:active {
+            background: #222;
+        }
+
+        div, footer {
+            text-align: center;
+        }
+
+        footer a {
+            line-height: 4;
+            margin-right: 1.5em;
+            color: #69c;
+        }
+
+        footer a:last-child {
+            margin-right: 0;
+        }
+    </style>
+    <script>
+      'use strict'
+
+      const LOGGING = false
+      const COLORS = ['#000', '#36f', '#0c0', '#0cc', '#c00', '#c0c', '#cc0', '#ccc']
+      const GRID_SIZE = 64
+      const CELL_VALUE_LIMIT = 256
+      const MAX_OPS = 10000000
+      const SCALE = 16
+      const PADDING = 8
+      const PANEL_HEIGHT = 40
+      const MAX_CODE_LEN = 8092
+      const DEMOS = [
+        '<----[>+>>>>>>>>V++++]>-',
+        'VVVV>+++++++[<++++++++>-]<[>>>+++++++[<++++++++>-]^[V+^-]V+[[>]<[->+>+<<]>>[-<<+>>]<+[<]>-]<<-[-V+^]V]',
+        'VVVV--[>+]++V>>>>^^^^-----[V+]---<<<<^-[>V+]+',
+        '+++[>>>+++++++[<++++++++>-]<[[>]<[->+>][<]>-]<<-[-V+^]V]',
+        'VVVVVVVVVVVVVVVVVV>>>>>>>>>VV++++++++++++[>+>+<<-]>>[[>]+[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]+[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]+[<]>-]>[>]^+[^+<[>-]>]>>>>>>>>>>>>>>VVV++++++++++++[>+>+<<-]>>[[>]+[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]+[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]+[<]>-]>[>]^+[^+<[>-]>]>>>++++++++[-[^+V-]^]<<<++++++++++++[--<+<+>>[V<<+>>^-]<<V]<<<<<<<<<<<<<<<<<<<^^^^++++++++++++[--<+<+>>[^<<+>>V-]<<^]<<<<<<+++++++[>++++++<-]>[-[V+^-]V]>>>++++++[<++++++++>-]<-[[>]+[<]>-]',
+        '++++++[>+>+<<-]>>[[>]++++++[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]++++++[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]++++++[<]>-]>[>]^+[^+<[>-]>]>>>VVV+++++++++[>+>+<<-]>>[[>]++[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]++[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]++[<]>-]>[>]^+[^+<[>-]>]>>>>>VVVVV+++++++++++++[>+>+<<-]>>[[>]++++[<]>-][<]>[-<+<+>>]<<[>>+<<-]>>[[V]++++[^]V-]<[>V[V]<+>^[^]<-]>V[V]<[->+<]>[[>]++++[<]>-]>[>]^+[^+<[>-]>]',
+        '>>>>>+<<<<<<-[-[>-<+>]+V>+V>+V<[>-<+>]+V<+V<+]x',
+        'VVVV>++++++++[>>>+++++++[<++++++++>-]<-[[>]+[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]++[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]+++[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]++++[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]+++++[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]++++++[<]>-]<<-[-V+^]V]++++++++[>>>+++++++[<++++++++>-]<-[[>]+++++++[<]>-]<<-[-V+^]V]',
+      ]
+
+      let startTime = null
+      let canvas
+      let canvasSize
+      let ctx
+      let status
+      let text
+
+      let buttonRight
+      let buttonLeft
+      let buttonDown
+      let buttonUp
+      let buttonIncrement
+      let buttonDecrement
+      let buttonEndLoop
+      let buttonStartLoop
+      let buttonDelete
+      let buttons
+
+      const demos = {}
+      let prevText
+
+      function init () {
+        // Look up elements.
+        canvas = document.getElementById('canvas')
+        status = document.getElementById('status')
+        text = document.getElementById('text')
+
+        // Initialize canvas.
+        ctx = canvas.getContext('2d')
+        canvas.width = GRID_SIZE * SCALE
+        canvas.height = GRID_SIZE * SCALE
+
+        // Initialize buttons.
+        buttonRight = document.getElementById('right')
+        buttonLeft = document.getElementById('left')
+        buttonDown = document.getElementById('down')
+        buttonUp = document.getElementById('up')
+        buttonIncrement = document.getElementById('increment')
+        buttonDecrement = document.getElementById('decrement')
+        buttonStartLoop = document.getElementById('startLoop')
+        buttonEndLoop = document.getElementById('endLoop')
+        buttonDelete = document.getElementById('delete')
+        buttons = [buttonRight, buttonLeft, buttonDown, buttonUp, buttonIncrement, buttonDecrement, buttonEndLoop, buttonStartLoop, buttonDelete]
+
+        // Add event listeners for physical keyboard interaction.
+        text.addEventListener('keyup', actionKey)
+        text.addEventListener('paste', actionKey)
+        text.addEventListener('cut', actionKey)
+
+        // add event listerns for provided virtual keyboard interaction
+        buttonRight.addEventListener('click', actionRight)
+        buttonLeft.addEventListener('click', actionLeft)
+        buttonDown.addEventListener('click', actionDown)
+        buttonUp.addEventListener('click', actionUp)
+        buttonIncrement.addEventListener('click', actionIncrement)
+        buttonDecrement.addEventListener('click', actionDecrement)
+        buttonEndLoop.addEventListener('click', actionEndLoop)
+        buttonStartLoop.addEventListener('click', actionStartLoop)
+        buttonDelete.addEventListener('click', actionDelete)
+        window.addEventListener('hashchange', actionHash)
+        window.addEventListener('resize', resize)
+
+        // Set up demos.
+        for (let i = 0; i < DEMOS.length; ++i) {
+          demos[i.toString()] = DEMOS[i]
+        }
+
+        // Initialize input code and output.
+        resize()
+        actionHash()
+        text.setSelectionRange(text.value.length, text.value.length)
+      }
+
+      function resize () {
+        document.body.style.padding = `${PADDING}px`
+        const availableWidth = window.innerWidth - 2 * PADDING
+        const availableHeight = window.innerHeight - 3 * PANEL_HEIGHT - 5 * PADDING
+
+        // Resize canvas.
+        canvasSize = Math.min(availableWidth, availableHeight)
+        canvas.style.width = `${canvasSize}px`
+        canvas.style.height = `${canvasSize}px`
+
+        // Resize status panel.
+        status.style.width = `${canvasSize}px`
+        status.style.height = `${PANEL_HEIGHT}px`
+        status.style.lineHeight = `${PANEL_HEIGHT}px`
+        status.style.marginTop = `${PADDING}px`
+
+        // Resize code text panel.
+        text.style.width = `${canvasSize}px`
+        text.style.height = `${PANEL_HEIGHT}px`
+        text.style.marginTop = `${PADDING}px`
+
+        // Resize buttons.
+        const buttonWidth = ((canvasSize - (buttons.length - 1) * PADDING) /
+          buttons.length)
+        for (let i = 0; i < buttons.length; ++i) {
+          const button = buttons[i]
+          button.style.marginTop = PADDING + 'px'
+          button.style.width = buttonWidth + 'px'
+          button.style.height = PANEL_HEIGHT + 'px'
+          button.style.marginLeft = (i === 0 ? 0 : PADDING) + 'px'
+        }
+        log('resized: canvas: ' + canvasSize + '; button: ' + buttonWidth)
+      }
+
+      function draw () {
+        if (prevText === text.value) {
+          return
+        }
+        log('draw', text.value)
+        ctx.fillStyle = COLORS[0]
+        ctx.fillRect(0, 0, GRID_SIZE * SCALE, GRID_SIZE * SCALE)
+        evaluate(text.value)
+        prevText = text.value
+        log('draw complete')
+      }
+
+      function outputStatus (ops, startTime) {
+        if (ops === 0) {
+          status.innerHTML = 'READY'
+        } else {
+          const ms = Date.now() - startTime
+          const rate = ms === 0 ? '-' : Math.round(10000 * ops / ms) / 10
+          status.innerHTML = `${text.value.length} bytes, ${ops} ops, ${(ms / 1000)}s, ${rate} ops/s`
+        }
+      }
+
+      function paintPixel (cellValue, x, y) {
+        ctx.fillStyle = COLORS[cellValue % COLORS.length]
+        ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE)
+      }
+
+      function evaluate (code) {
+        let x = 0
+        let y = 0
+        let ops = 0
+        let idx = 0
+        const stack = []
+        const gridTape = [...Array(GRID_SIZE)].map(_ => Array(GRID_SIZE).fill(0))
+
+        startTime = Date.now()
+        logOp(ops, '-', idx, 'BEGIN', x, y, gridTape)
+
+        if (code.length > MAX_CODE_LEN) {
+          error(`Code contains ${code.length} bytes; must not exceed ${MAX_CODE_LEN}`)
+          return
+        }
+
+        while (idx < code.length) {
+          const execIdx = idx
+          const op = code.charAt(idx)
+          switch (op) {
+            case '>':
+              x = (x + 1) % GRID_SIZE
+              ++idx
+              break
+            case '<':
+              x = (x - 1 + GRID_SIZE) % GRID_SIZE
+              ++idx
+              break
+            case '^':
+              y = (y - 1 + GRID_SIZE) % GRID_SIZE
+              ++idx
+              break
+            case 'v':
+              y = (y + 1) % GRID_SIZE
+              ++idx
+              break
+            case '-':
+              gridTape[y][x] += CELL_VALUE_LIMIT - 1
+              gridTape[y][x] %= CELL_VALUE_LIMIT
+              paintPixel(gridTape[y][x], x, y)
+              ++idx
+              break
+            case '+':
+              gridTape[y][x] += 1
+              gridTape[y][x] %= CELL_VALUE_LIMIT
+              paintPixel(gridTape[y][x], x, y)
+              ++idx
+              break
+            case '[':
+              stack.push(idx + 1)
+              if (gridTape[y][x] !== 0) {
+                ++idx
+              } else {
+                let loopsToCloseCount = 1
+                while (loopsToCloseCount > 0) {
+                  ++idx
+                  if (idx >= code.length) {
+                    error('Unmatched "["')
+                    return
+                  }
+                  switch (code.charAt(idx)) {
+                    case '[':
+                      ++loopsToCloseCount
+                      break
+                    case ']':
+                      --loopsToCloseCount
+                      break
+                  }
+                }
+              }
+
+              break
+            case ']':
+              if (stack.length === 0) {
+                error('Unexpected \']\'')
+                return
+              }
+              const jumpIdx = stack.pop()
+              if (gridTape[y][x] !== 0) {
+                stack.push(jumpIdx)
+                idx = jumpIdx
+              } else {
+                ++idx
+              }
+              break
+            default:
+              error('Unknown operation')
+              return
+          }
+
+          logOp(ops, execIdx, idx, op, x, y, gridTape)
+          ++ops
+          if (ops > MAX_OPS) {
+            applyOperationsLimit(startTime)
+            return
+          }
+        }
+
+        outputStatus(ops, startTime)
+        logOp(ops, '-', idx, 'END', x, y, gridTape)
+      }
+
+      function error (msg) {
+        ctx.fillStyle = COLORS[4]
+        ctx.fillRect(0, 0, GRID_SIZE * SCALE, GRID_SIZE * SCALE)
+        status.innerHTML = `ERROR: ${msg}`
+      }
+
+      function applyOperationsLimit (startTime) {
+        const duration = Date.now() - startTime
+        status.innerHTML = `WARNING: Reached Operations limit of ${MAX_OPS} in ${duration} milliseconds.`
+      }
+
+      function actionHash () {
+        if (window.location.hash.length > 1) {
+          const code = urlDecode(window.location.hash.substring(1))
+          if (code === null) {
+            return
+          }
+          if (code !== text.value) {
+            text.value = code
+            log('set code from hash:', text.value)
+          }
+        }
+        normalizeDraw()
+      }
+
+      function updateHash () {
+        const encoded = urlEncode(text.value)
+        const hash = window.location.hash
+        const fragment = hash === '' ? '' : hash.substring(1)
+        if (encoded !== fragment) {
+          window.history.replaceState(null, '', `#${encoded}`)
+          log('set hash from code:', window.location.hash)
+        }
+      }
+
+      function actionKey () {
+        setTimeout(normalizeDraw, 10)
+      }
+
+      function normalizeDraw () {
+        lookupDemo()
+        sanitizeText()
+        updateHash()
+        draw()
+      }
+
+      function lookupDemo () {
+        const code = demos[text.value]
+        if (typeof code !== 'undefined') {
+          text.value = code
+        }
+      }
+
+      function actionRight (e) {
+        e.preventDefault()
+        insertText('>')
+        draw()
+      }
+      function actionLeft (e) {
+        e.preventDefault()
+        insertText('<')
+        draw()
+      }
+      function actionDown (e) {
+        e.preventDefault()
+        insertText('v')
+        draw()
+      }
+      function actionUp (e) {
+        e.preventDefault()
+        insertText('^')
+        draw()
+      }
+      function actionIncrement (e) {
+        e.preventDefault()
+        insertText('+')
+        draw()
+      }
+      function actionDecrement (e) {
+        e.preventDefault()
+        insertText('-')
+        draw()
+      }
+      function actionEndLoop (e) {
+        e.preventDefault()
+        insertText(']')
+        draw()
+      }
+      function actionStartLoop (e) {
+        e.preventDefault()
+        insertText('[')
+        draw()
+      }
+
+      function actionDelete (e) {
+        e.preventDefault()
+        deleteText()
+        draw()
+      }
+
+      function insertText (ch) {
+        const cursorStart = text.selectionStart
+        const left = text.value.substring(0, cursorStart)
+        const right = text.value.substring(text.selectionEnd)
+        text.value = left + ch + right
+        text.focus()
+        text.setSelectionRange(cursorStart + 1, cursorStart + 1)
+        updateHash()
+      }
+
+      function deleteText () {
+        let cursorStart = text.selectionStart
+        let left
+        const right = text.value.substring(text.selectionEnd)
+        if (text.selectionEnd > cursorStart) {
+          left = text.value.substring(0, cursorStart)
+        } else if (cursorStart > 0) {
+          left = text.value.substring(0, cursorStart - 1)
+          --cursorStart
+        } else {
+          left = ''
+        }
+        text.value = left + right
+        text.focus()
+        text.setSelectionRange(cursorStart, cursorStart)
+        updateHash()
+      }
+
+      function sanitizeText () {
+        const cursorStart = text.selectionStart
+        const cursorEnd = text.selectionEnd
+        const cursorDir = text.selectionDirection
+
+        let result = ''
+        for (let i = 0; i < text.value.length; ++i) {
+          const ch = text.value.charAt(i).toLowerCase()
+          const allowedInstructions = ['[', ']', '>', '<', 'v', '^', '+', '-']
+          if (allowedInstructions.includes(ch)) {
+            result += ch
+          }
+        }
+
+        if (result !== text.value) {
+          text.value = result
+          text.setSelectionRange(cursorStart, cursorEnd, cursorDir)
+        }
+      }
+
+      function urlEncode (textToEncode) {
+        return btoa(textToEncode)
+      }
+
+      function urlDecode (textToDecode) {
+        return atob(textToDecode)
+      }
+
+      function log () {
+        if (LOGGING) {
+          const args = Array.prototype.slice.call(arguments)
+          let ts
+          if (startTime === null) {
+            ts = '-'
+          } else {
+            ts = ((Date.now() - startTime) / 1000)
+          }
+          console.log(`[${ts}] ${args.join(' ')}`)
+        }
+      }
+
+      function logOp (ops, execIdx, nextIdx, op, x, y, gridTape) {
+        if (LOGGING) {
+          log(`(${ops}) ${execIdx}: ${op}; x: ${x}; y: ${y}; tapeValue: ${gridTape[y][x]} next: ${nextIdx}`)
+        }
+      }
+
+      window.addEventListener('load', init)
+    </script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<pre id="status"></pre>
+<input id="text" inputmode="none" autofocus placeholder="Type code (or a number from 0-7 for a demo)">
+<div>
+    <button id="right" title="Right">&gt;</button>
+    <button id="left" title="Left">&lt;</button>
+    <button id="down" title="Down">v</button>
+    <button id="up" title="Up">^</button>
+    <button id="increment" title="Increment">&plus;</button>
+    <button id="decrement" title="Decrement">&minus;</button>
+    <button id="startLoop" title="Start Loop">[</button>
+    <button id="endLoop" title="End Loop">]</button>
+    <button id="delete" title="Delete">&leftarrow;</button>
+</div>
+<footer>
+    <a href="https://github.com/KjeldSchmidt/Paintfuck">GitHub</a>
+    <a href="https://kjeld-schmidt.com">Kjeld Schmidt</a>
+    <a href="https://github.com/KjeldSchmidt/Paintfuck/blob/main/LICENSE.md">License</a>
+</footer>
+</body>
+</html>

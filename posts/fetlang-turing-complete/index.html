@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en" data-mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.2.2" /><meta property="og:title" content="Fetlang is turing complete" /><meta property="og:locale" content="en" /><meta name="description" content="Recently, the esoteric programming language Fetlang was linked and discussed on /r/programming. On the project’s GitHub page I noticed something in its list of features:" /><meta property="og:description" content="Recently, the esoteric programming language Fetlang was linked and discussed on /r/programming. On the project’s GitHub page I noticed something in its list of features:" /><link rel="canonical" href="https://kjeld-schmidt.com/posts/fetlang-turing-complete/" /><meta property="og:url" content="https://kjeld-schmidt.com/posts/fetlang-turing-complete/" /><meta property="og:site_name" content="Kjeld Schmidt" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2017-10-11T02:00:00+02:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="Fetlang is turing complete" /><meta name="twitter:site" content="@twitter_username" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-10-27T18:18:39+02:00","datePublished":"2017-10-11T02:00:00+02:00","description":"Recently, the esoteric programming language Fetlang was linked and discussed on /r/programming. On the project’s GitHub page I noticed something in its list of features:","headline":"Fetlang is turing complete","mainEntityOfPage":{"@type":"WebPage","@id":"https://kjeld-schmidt.com/posts/fetlang-turing-complete/"},"url":"https://kjeld-schmidt.com/posts/fetlang-turing-complete/"}</script><title>Fetlang is turing complete | Kjeld Schmidt</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="Kjeld Schmidt"><meta name="application-name" content="Kjeld Schmidt"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" alt="avatar" class="mx-auto"> <img src=" https://avatars.githubusercontent.com/u/7051783?v=4 " alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">Kjeld Schmidt</a></div><div class="site-subtitle font-italic">A log of random exploits in software development and DIY.</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="https://github.com/KjeldSchmidt" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['contact','kjeld-schmidt.com'].join('@')" aria-label="email" target="_blank" rel="noopener"> <i class="fas fa-envelope"></i> </a> <a href="/feed.xml" aria-label="rss" target="_blank" rel="noopener"> <i class="fas fa-rss"></i> </a> <a href="https://www.linkedin.com/in/kjeld-schmidt/" aria-label="linkedin" target="_blank" rel="noopener"> <i class="fab fa-linkedin"></i> </a></div></div><div id="topbar-wrapper" class="row justify-content-center"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>Fetlang is turing complete</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>Fetlang is turing complete</h1><div class="post-meta text-muted"><div> By <em> <a href="https://github.com/kjeldschmidt">Kjeld Schmidt</a> </em></div><div class="d-flex"><div> <span> Posted <em class="timeago" data-ts="1507680000" data-toggle="tooltip" data-placement="bottom" data-tooltip-df="llll" > 2017-10-11 </em> </span> <span> Updated <em class="timeago" data-ts="1698423519" data-toggle="tooltip" data-placement="bottom" data-tooltip-df="llll" > 2023-10-27 </em> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="1522 words"> <em>8 min</em> read</span></div></div></div><div class="post-content"><p>Recently, the esoteric programming language Fetlang was linked and discussed on /r/programming. On the <a href="https://github.com/fetlang/fetlang">project’s GitHub page</a> I noticed something in its list of features:</p><blockquote><p>Probably Turing complete</p></blockquote><p>is what it used to say. I decided to do something about that and try to prove its Turing completeness. Initially I wanted to do Conways Game of Life, always a fun project, but Fetlang’s dense and unwieldy syntax made me drop down to easy mode: Rule 110, a much simpler Turing complete cellular automaton. The whole project took me around five hours, most of which were spent trying to figure out how to handle the two only data types. I’ll run you trough my process, which should also help you a lot if you ever decide you need to write erotica while at work. Note that this overview is entirely functional and ignores the many unique features of Fetlang which enables you make your code more prosaic, such as possessives and pronouns.</p><h2 id="understanding-fetlang"><span class="mr-2">Understanding Fetlang</span><a href="#understanding-fetlang" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2></h2><h3 id="understanding-the-data-types"><span class="mr-2">Understanding the Data Types</span><a href="#understanding-the-data-types" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3></h3><p>Fetlang has but two data types: Fractions and Chains. Fractions are what they say: Rational, non-float numbers. If they happen to have an ASCII-value, they can be printed to screen. Chains are linked lists of fractions and can be initialized by string literals. Fractions cannot be initialized by normal integer literals - rather, you have to spell out the numbers. Types are not changeable after initialization.</p><h4 id="initializing-setting-and-resetting"><span class="mr-2">Initializing, setting and resetting</span><a href="#initializing-setting-and-resetting" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4></h4><p>The following code will show you how to initialize variables</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre>( Parens make comments )
+
+( Erik is a fraction variable. The following code assumes "standalone" lines, i.e. a previously uninitialized variable )
+Worship Erik ( Sets Erik to 0. Worship multiplies, by 1 if no second argument is given. Erik is not initialized, but from context, must be a fraction, set to 0 by default)
+Lick Erik ( Sets Erik to 1. Lick adds, adding 1 if no second argument is given. Since Erik defaults to 0, he is licked once, hence Erik is 1)
+Lick Erik forty five times ( Sets Erik to 45 )
+
+( And if Erik is already set and needs to be reset )
+Have Erik spank Erik ( Resets Erik to 0, by spanking (subtracting) him from himself )
+
+( Tiffany is a Chain Variable )
+Make Tiffany moan ( Declares Tiffany to be an empty chain. Can also be used to reset, if already set )
+Make Tiffany moan "Wow, that's nice" ( String literals work. Concatenating is not directly possible )
+</pre></table></code></div></div><p>So far, so easy.</p><h3 id="control-flow"><span class="mr-2">Control Flow</span><a href="#control-flow" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3></h3><h4 id="comparisions"><span class="mr-2">Comparisions</span><a href="#comparisions" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4></h4><p>Comparing numbers is easy enough:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre>(Set Anna to 1 and Betty to 2)
+Lick Anna
+Lick Betty two times
+
+( Anna &gt; Betty )
+If Anna is dominant towards Betty
+( Anna == Betty )
+If Anna is Betty
+( Anna &lt; Betty )
+If Anna is submissive to Betty
+( Anna != Betty )
+If Anna is not Betty
+</pre></table></code></div></div><p>However, there is no direct way to compare chains, and figuring out a correct way to do this was the hardest part for me.</p><h4 id="the-bind-operator-bondage-loops"><span class="mr-2">The Bind Operator (“Bondage Loops”)</span><a href="#the-bind-operator-bondage-loops" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4></h4><p>A bondage loop allows access to all values inside a chain. It is, in essence, a “for-in” loop.</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre>Make Anna moan "Array"
+
+Bind Emma to Anna
+  Make slave scream Emma
+
+( Prints "A", "r", "r", "a", "y" on individual lines )
+</pre></table></code></div></div><p>The important and neat thing here is that Emma is not a chain of length 1, but a fraction! This enables us to do many useful things.</p><p>There are also while and until loops, which are the most self-explanatory things in this language.</p><h4 id="checking-for-a-specific-ascii-value"><span class="mr-2">Checking for a specific ASCII-value</span><a href="#checking-for-a-specific-ascii-value" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4></h4><p>This is one more tool we’re going to need to write somewhat understandable code. Let’s try some things:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre><td class="rouge-code"><pre>Make Anna moan "A"
+Lick Betty sixty five times
+
+(Print "A" two times)
+Make Slave scream Anna
+Make Slave scream Betty
+
+(So, let's try...)
+
+x If Anna is "A" (Can't use string literals in comparison)
+x If Anna is Betty (Incompatible types)
+x If Anna is sixty five (Can't use number literals either, also wrong types)
+
+(So, uhmm....)
+
+Bind Emma to Anna
+  (Anna is a string literal, but Emma is not - she is a fraction!)
+  If Emma is Betty ( This works! )
+</pre></table></code></div></div><p>Neat.</p><h3 id="iterating-through-a-chain-and-assigning-conditional-values"><span class="mr-2">Iterating through a chain and assigning conditional values</span><a href="#iterating-through-a-chain-and-assigning-conditional-values" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3></h3><p>So, now we can put these tools together to go from an input string to a series of conditional reactions, based on individual characters:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre>( This program detects if a string contains two zeroes in a row )
+Make Anna moan "11101010100"
+Lick AsciiZero forty eight times
+Worship ZeroesInARow
+Lick limit two times
+
+Bind Emma to Anna
+  If Emma is AsciiZero
+    Lick ZeroesInARow
+    If ZeroesInARow is limit
+      Make Slave Scream "00 detected!"
+  Otherwise
+    Have ZeroesInARow Spank ZeroesInARow
+</pre></table></code></div></div><p>And with this, there is just one more construct to understand for my proof code to become obvious</p><h3 id="adding-to-a-chain"><span class="mr-2">Adding to a Chain</span><a href="#adding-to-a-chain" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3></h3><p>Adding to a Chain/String can be done with the ‘hogtie’-operator. Here, a fraction has to hogtie a chain, writing the byte on its end.</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre>( Generates the String "abcd" and prints it )
+Make Anna moan
+Lick char ninety seven times ( Set to "a" )
+Worship counter
+Lick loopmax four times
+
+While counter is submissive to loopmax
+  Lick counter
+  Have char hogtie Anna
+  Lick char
+
+Make slave scream Anna
+</pre></table></code></div></div><p>And that’s it. We’ve now fully learned to juggle the data types and can begin writing the actual program - which is now fairly easy.</p><h2 id="understanding-the-turing-completeness-proof"><span class="mr-2">Understanding the Turing completeness proof</span><a href="#understanding-the-turing-completeness-proof" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2></h2><p>Disclaimer: I’m 99% sure my code can be simplified or improved. But I don’t care.</p><p>To understand the steps the program takes, it’s probably best to look at my python generator code, which I wrote after completing the first version of the proof to expand the size of the Rule 110 board. Steps are:</p><div class="language-python highlighter-rouge"><div class="code-header"> <span data-label-text="Python"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">generateIntro</span><span class="p">()</span>             <span class="c1"># Initialize required variables
+</span>    <span class="n">generateNumbers</span><span class="p">()</span>           <span class="c1"># Initialize all required numbers, since you can't use literals in control flow
+</span>                                <span class="c1"># In the python code, this is inefficient, since I was too lazy to figure out how to spell the numbers, so I have many, many lines of licking
+</span>    <span class="n">beginLoop</span><span class="p">()</span>                 <span class="c1"># Literally just the while loop and condition
+</span>    <span class="n">resetTempVariables</span><span class="p">()</span>        <span class="c1"># Does what it says
+</span>    <span class="n">setEmptyPositions</span><span class="p">()</span>         <span class="c1"># That's also resetting, come to think of it
+</span>    <span class="n">incrementLoopCounter</span><span class="p">()</span>      <span class="c1"># Again, obvious
+</span>    <span class="n">printCurrentState</span><span class="p">()</span>         <span class="c1"># You probably get the idea
+</span>    <span class="n">getParentStrings</span><span class="p">()</span>
+    <span class="n">getDescendants</span><span class="p">()</span>
+    <span class="n">writeNextGeneration</span><span class="p">()</span>       <span class="c1"># Print the next generation
+</span>    <span class="n">saveNextGeneration</span><span class="p">()</span>        <span class="c1"># Save the next generation as current via bondage loop
+</span></pre></table></code></div></div><p>Okay, so everything I’ve commented is pretty much boring cruft - setting and resetting values, mostly. Let’s look at the other functions:</p><h3 id="getparentstrings"><span class="mr-2">getParentStrings()</span><a href="#getparentstrings" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3></h3><p>Here we loop through the current state of the automaton (via bondage loop + iteration counter), doing this for all but the outermost positions:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre>If counter is submissive to number4
+  If counter is dominant towards number0
+    Have Emma hogtie position2
+</pre></table></code></div></div><p>This just builds a 3-character-Chain for each position, by taking its upper left, upper middle and upper right neighbor and saving it.</p><h3 id="getdescendants"><span class="mr-2">getDescendants()</span><a href="#getdescendants" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3></h3><p>This function requires a lot more code. First, we explicitly write the values of left, middle and right:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre>Bind Emma to position2
+  if counter is number0
+    if Emma is AsciiZero
+      Have AsciiZero lick left
+    Otherwise
+      Have AsciiOne lick left
+
+  if counter is number1
+    if Emma is AsciiZero
+      Have AsciiZero lick middle
+    Otherwise
+      Have AsciiOne lick middle
+
+  if counter is number2
+    if Emma is AsciiZero
+      Have AsciiZero lick right
+    Otherwise
+      Have AsciiOne lick right
+
+  Lick counter
+</pre></table></code></div></div><p>Left, middle, right and counter are of course reset before each position is calculated.</p><p>Now we have three accessible variables for the current generation. A short if-tree gives us the calculated value for the next one:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre>if left is AsciiOne
+  if middle is AsciiOne
+    if right is AsciiZero
+      Have AsciiOne hogtie nextposition2
+    otherwise
+      have AsciiZero hogtie nextposition2
+  if middle is AsciiZero
+    if right is AsciiOne
+      have AsciiOne hogtie nextposition2
+    otherwise
+      have AsciiZero hogtie nextposition2
+if left is AsciiZero
+  if middle is AsciiOne
+    Have AsciiOne hogtie nextposition2
+  otherwise
+    if right is AsciiOne
+      Have AsciiOne hogtie nextposition2
+    otherwise
+      have AsciiZero hogtie nextposition2
+</pre></table></code></div></div><p>And this is the entire trick. Rule 110 is incredibly simple, and thus very nice for these proofs.</p><p>I really enjoyed figuring all this out. If you want to understand my proof in more detail, check out the code on <a href="https://github.com/KjeldSchmidt/Fetlang_110">Github</a> or just ask.</p><p>The Fetlang repository no longer says that it is probably turing complete - they are sure now.</p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/computer-science/'>computer science</a>, <a href='/categories/quick-build/'>quick build</a>, <a href='/categories/esolang/'>esolang</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/humor/" class="post-tag no-text-decoration" >humor</a> <a href="/tags/computer-science/" class="post-tag no-text-decoration" >computer science</a> <a href="/tags/turing-complete/" class="post-tag no-text-decoration" >turing complete</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/"> CC BY 4.0 </a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=Fetlang is turing complete - Kjeld Schmidt&amp;url=https://kjeld-schmidt.com/posts/fetlang-turing-complete/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=Fetlang is turing complete - Kjeld Schmidt&amp;u=https://kjeld-schmidt.com/posts/fetlang-turing-complete/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https://kjeld-schmidt.com/posts/fetlang-turing-complete/&amp;text=Fetlang is turing complete - Kjeld Schmidt" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" data-title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">Recently Updated</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/styling-flashy-quotes/">Styling Flashy Quotes for an E-Ink Screen</a><li><a href="/posts/use-a-do-script/">I think you should use a do-script</a><li><a href="/posts/unaver/">Unary Semantic Versioning</a><li><a href="/posts/loudly-adding-complexity/">Loudly adding complexity: A lesson on leadership</a><li><a href="/posts/Paintfuck/">Paintfuck: Brainfuck for art</a></ul></div><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/creative/">creative</a> <a class="post-tag" href="/tags/software-development/">software development</a> <a class="post-tag" href="/tags/humor/">humor</a> <a class="post-tag" href="/tags/leadership/">leadership</a> <a class="post-tag" href="/tags/brainfuck/">brainfuck</a> <a class="post-tag" href="/tags/computer-science/">computer science</a> <a class="post-tag" href="/tags/decorative/">decorative</a> <a class="post-tag" href="/tags/e-ink/">e-ink</a> <a class="post-tag" href="/tags/esolang/">esolang</a> <a class="post-tag" href="/tags/hardware/">hardware</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">Contents</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="tail-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/unaver/"><div class="card-body"> <em class="timeago small" data-ts="1650153600" > 2022-04-17 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Unary Semantic Versioning</h3><div class="text-muted small"><p> Today, I created the unaver.org website as a spoof of semantic versioning. There’s not much to say about it - as you can see on the linked page, Unary Semantic Versioning is the future of software ...</p></div></div></a></div><div class="card"> <a href="/posts/Paintfuck/"><div class="card-body"> <em class="timeago small" data-ts="1698364800" > 2023-10-27 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Paintfuck: Brainfuck for art</h3><div class="text-muted small"><p> Susam Pal’s minimal drawing language CRF[] recently got some attention on r/programming, quickly followed by the slightly more interactive CFRS[] variant (website, reddit). I found it very enjoyab...</p></div></div></a></div><div class="card"> <a href="/posts/styling-flashy-quotes/"><div class="card-body"> <em class="timeago small" data-ts="1760832000" > 2025-10-19 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Styling Flashy Quotes for an E-Ink Screen</h3><div class="text-muted small"><p> The time of the affordable e-ink is finally here. I’ve wanted a decent-sized e-ink screen for nearly a decade now - basically ever since I became interested in microelectronics back in 2016 - and i...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <span class="btn btn-outline-primary disabled" prompt="Older"><p>-</p></span> <a href="/posts/unaver/" class="btn btn-outline-primary" prompt="Newer"><p>Unary Semantic Versioning</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center text-muted"><div class="footer-left"><p class="mb-0"> © 2025 <a href="https://github.com/kjeldschmidt">Kjeld Schmidt</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/creative/">creative</a> <a class="post-tag" href="/tags/software-development/">software development</a> <a class="post-tag" href="/tags/humor/">humor</a> <a class="post-tag" href="/tags/leadership/">leadership</a> <a class="post-tag" href="/tags/brainfuck/">brainfuck</a> <a class="post-tag" href="/tags/computer-science/">computer science</a> <a class="post-tag" href="/tags/decorative/">decorative</a> <a class="post-tag" href="/tags/e-ink/">e-ink</a> <a class="post-tag" href="/tags/esolang/">esolang</a> <a class="post-tag" href="/tags/hardware/">hardware</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lozad/dist/lozad.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/en.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/app.js"></script>
