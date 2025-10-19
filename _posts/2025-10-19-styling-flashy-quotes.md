@@ -84,8 +84,8 @@ Here's a small selection of what I've done with the screen (and the quote
 styler) so far:
 
 ![A paragraph from the first episode of Welcome To Night Vale, typeset with the layout tool](/assets/images/e-ink-text-layout/dog-park.jpg){: width="250" }
-!["Fuck Literature", a quote by Ernest Hemingway](/assets/images/e-ink-text-layout/color-chart.jpg){: width="250" }
-![An illustration from Gunnerkrigg Court, an excellent webcomic](/assets/images/e-ink-text-layout/fuck-literature.jpg){: width="250" }
+!["Fuck Literature", a quote by Ernest Hemingway](/assets/images/e-ink-text-layout/fuck-literature.jpg){: width="250" }
+![An illustration from Gunnerkrigg Court, an excellent webcomic](/assets/images/e-ink-text-layout/gunnerkrigg-illustration.jpg){: width="250" }
 ![A black-and-white technical drawing explaning ISO216 paper sizes](/assets/images/e-ink-text-layout/iso-paper.jpg){: width="250" }
 ![A color chart, showing that dark colors are displayed more reliably than light ones](/assets/images/e-ink-text-layout/color-chart.jpg){: width="250" }
 
