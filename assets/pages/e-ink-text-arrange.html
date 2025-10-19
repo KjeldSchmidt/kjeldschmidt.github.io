@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Typography Layout Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link id="googleFontsLink" href="" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --text-color: #000000;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #textContent {
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 600px;
+        }
+
+
+
+        .inline-word-styling {
+            position: absolute;
+            background: #667eea;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 200px;
+        }
+
+        .inline-word-styling.active {
+            display: flex;
+        }
+
+        .inline-word-styling input,
+        .inline-word-styling select {
+            padding: 4px 6px;
+            border: none;
+            border-radius: 3px;
+            font-size: 11px;
+            background: white;
+            color: #333;
+        }
+
+        .inline-word-styling input[type="color"] {
+            width: 100%;
+            height: 25px;
+            padding: 0;
+        }
+
+        .inline-word-styling input[type="range"] {
+            width: 100%;
+        }
+
+        .inline-color-swatches {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+        }
+
+        .inline-color-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .inline-color-swatch:hover {
+            transform: scale(1.1);
+            border-color: white;
+        }
+
+        .inline-color-swatch.selected {
+            border-color: white;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.8);
+        }
+
+        .alignment-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .align-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .align-btn[data-align="left"] {
+            text-align: left;
+        }
+        
+        .align-btn[data-align="center"] {
+            text-align: center;
+        }
+        
+        .align-btn[data-align="right"] {
+            text-align: right;
+        }
+
+        .align-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .align-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .weight-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .weight-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .weight-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .weight-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .inline-weight-buttons {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr;
+            gap: 4px;
+        }
+
+        .inline-weight-btn {
+            padding: 4px 6px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .inline-weight-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .inline-weight-btn.active {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .inline-weight-btn[data-weight=""] {
+            padding: 4px;
+            min-width: 24px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+        }
+
+        .inline-reset-btn {
+            padding: 4px;
+            min-width: 24px;
+            height: 24px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inline-reset-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .inline-reset-btn:active {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .inline-color-swatch.default-color {
+            background: transparent;
+            border: 1px dashed rgba(255,255,255,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .inline-color-swatch.default-color:hover {
+            border-color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .inline-color-swatch.default-color.selected {
+            border-color: white;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .word-styling h4 {
+            margin-bottom: 10px;
+            color: #856404;
+            font-size: 14px;
+        }
+
+        .word-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .word-controls select,
+        .word-controls input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .word-controls input[type="color"] {
+            width: 100%;
+            height: 35px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .text-content {
+            text-align: center;
+            max-width: 95%;
+            word-wrap: break-word;
+            line-height: 1.6;
+            cursor: pointer;
+        }
+
+        .text-content .word {
+            cursor: pointer;
+            transition: background-color 0.2s;
+            touch-action: manipulation;
+        }
+
+        .text-content .word:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .text-content .word.selected {
+            background-color: rgba(102, 126, 234, 0.2);
+            outline: 2px solid #667eea;
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 15px;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+        
+        .button-group {
+            margin-bottom: 25px;
+        }
+
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .control-group input,
+        .control-group select,
+        .control-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .control-group input:focus,
+        .control-group select:focus,
+        .control-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .control-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .color-palette {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .color-option {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .color-option label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .color-swatches {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+        }
+
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .color-swatch.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+        }
+
+        .color-swatch.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .canvas-container {
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+        }
+
+        .canvas {
+            width: 800px;
+            height: 600px;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            aspect-ratio: 4/3;
+        }
+
+        .text-content {
+            text-align: center;
+            max-width: 95%;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+
+
+
+        @media (max-width: 1200px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                border-radius: 8px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            .main-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+            }
+            
+            .canvas-container {
+                order: 1;
+                padding: 15px;
+            }
+            
+            .canvas {
+                width: min(100%, 120vh);
+                height: auto;
+                padding: 0;
+                margin: 0;
+                aspect-ratio: 4/3;
+            }
+            
+            .controls {
+                order: 2;
+                padding: 15px;
+                border-right: none;
+                border-top: 1px solid #e9ecef;
+                position: relative;
+            }
+            
+            .control-group {
+                margin-bottom: 15px;
+            }
+            
+            .control-group label {
+                font-size: 14px;
+            }
+            
+            .control-group input,
+            .control-group select,
+            .control-group textarea {
+                padding: 8px;
+                font-size: 14px;
+            }
+            
+            .word-controls {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            
+            .button-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .button-group .btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .export-info {
+                font-size: 12px;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 2px;
+            }
+            
+            .header {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .header p {
+                font-size: 0.8rem;
+            }
+            
+            .controls {
+                padding: 10px;
+            }
+            
+            .control-group {
+                margin-bottom: 12px;
+            }
+            
+            .control-group label {
+                font-size: 13px;
+            }
+            
+            .control-group input,
+            .control-group select,
+            .control-group textarea {
+                padding: 6px;
+                font-size: 13px;
+            }
+            
+            .canvas-container {
+                padding: 10px;
+            }
+            
+            .canvas {
+                width: 100%;
+                max-width: 100vw;
+                height: auto;
+                padding: 0;
+                aspect-ratio: 4/3;
+            }
+            
+            
+            .btn {
+                padding: 10px;
+                font-size: 13px;
+            }
+            
+            .word-styling {
+                padding: 10px;
+            }
+            
+            .word-styling h4 {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="main-content">
+            <div class="controls" id="controls">
+                <div class="control-group">
+                    <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+                    <button class="btn btn-primary" id="randomizeBtn" style="width: 100%; margin-top: 12px;">🎲 Randomize</button>
+                </div>
+
+                <div style="font-size: 12px; color: #6c757d; margin-bottom: 20px; line-height: 1.4;">
+                    To change the style of a single word, click or tap it in the preview
+                </div>
+
+                <div class="control-group">
+                    <label for="fontSelect">Font</label>
+                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+                        <select id="fontSelect" style="flex: 1;">
+                            <!-- Options populated dynamically -->
+                        </select>
+                        <button class="btn btn-secondary" id="randomizeFontBtn" style="padding: 10px; font-size: 12px;" title="Randomize Font">🎲</button>
+                    </div>
+                    <input type="range" id="fontSize" min="12" max="120" value="48" style="margin-bottom: 12px;">
+                    <div class="weight-buttons" style="margin-bottom: 12px;">
+                        <button class="weight-btn" id="globalBoldBtn" data-bold="false" title="Bold" style="font-weight: 700;">Bold</button>
+                        <button class="weight-btn" id="globalItalicBtn" data-italic="false" title="Italic" style="font-style: italic;">Italic</button>
+                    </div>
+                    <div class="alignment-buttons">
+                        <button class="align-btn" data-align="left" title="Left">Left</button>
+                        <button class="align-btn active" data-align="center" title="Center">Center</button>
+                        <button class="align-btn" data-align="right" title="Right">Right</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Colors</label>
+                    <div class="color-palette">
+                        <div class="color-option">
+                            <label>Text Color</label>
+                            <div class="color-swatches" id="textColorSwatches">
+                                <div class="color-swatch" data-color="#000000" style="background: #000000;" title="Black"></div>
+                                <div class="color-swatch" data-color="#ffffff" style="background: #ffffff; border: 1px solid #ccc;" title="White"></div>
+                                <div class="color-swatch" data-color="#a02020" style="background: #a02020;" title="Red"></div>
+                                <div class="color-swatch" data-color="#d07020" style="background: #d07020;" title="Orange"></div>
+                                <div class="color-swatch" data-color="#f0e050" style="background: #f0e050;" title="Yellow"></div>
+                                <div class="color-swatch" data-color="#608050" style="background: #608050;" title="Green"></div>
+                                <div class="color-swatch" data-color="#5080b8" style="background: #5080b8;" title="Blue"></div>
+                                <div class="color-swatch" data-color="#68104D" style="background: #68104D;" title="Magenta"></div>
+                            </div>
+                        </div>
+                        <div class="color-option">
+                            <label>Background Color</label>
+                            <div class="color-swatches" id="bgColorSwatches">
+                                <div class="color-swatch" data-color="#000000" style="background: #000000;" title="Black"></div>
+                                <div class="color-swatch" data-color="#ffffff" style="background: #ffffff; border: 1px solid #ccc;" title="White"></div>
+                                <div class="color-swatch" data-color="#a02020" style="background: #a02020;" title="Red"></div>
+                                <div class="color-swatch" data-color="#d07020" style="background: #d07020;" title="Orange"></div>
+                                <div class="color-swatch" data-color="#f0e050" style="background: #f0e050;" title="Yellow"></div>
+                                <div class="color-swatch" data-color="#608050" style="background: #608050;" title="Green"></div>
+                                <div class="color-swatch" data-color="#5080b8" style="background: #5080b8;" title="Blue"></div>
+                                <div class="color-swatch" data-color="#68104D" style="background: #68104D;" title="Magenta"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-success" id="exportBtn" style="width: 100%;">📸 Send to Display</button>
+                    <button class="btn btn-secondary" id="downloadBtn" style="width: 100%;">💾 Download PNG</button>
+                </div>
+
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas" id="canvas">
+                    <div class="text-content" id="textContent"></div>
+                    <div class="inline-word-styling" id="inlineWordStyling">
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <button class="inline-reset-btn" id="inlineResetFont" title="Reset to default font">↺</button>
+                            <select id="inlineWordFont" style="flex: 1;">
+                                <!-- Options populated dynamically -->
+                            </select>
+                            <button class="inline-reset-btn" id="inlineRandomFont" title="Randomize font" style="font-size: 11px;">🎲</button>
+                        </div>
+                        <div class="inline-weight-buttons">
+                            <button class="inline-weight-btn inline-reset-btn" id="inlineResetStyle" title="Reset to default">↺</button>
+                            <button class="inline-weight-btn" id="inlineBoldBtn" title="Bold" style="font-weight: 700;">Bold</button>
+                            <button class="inline-weight-btn" id="inlineItalicBtn" title="Italic" style="font-style: italic;">Italic</button>
+                        </div>
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <button class="inline-reset-btn" id="inlineResetColor" title="Reset to default color">↺</button>
+                            <div class="inline-color-swatches" style="flex: 1;">
+                                <div class="inline-color-swatch" data-color="#000000" style="background: #000000;" title="Black"></div>
+                                <div class="inline-color-swatch" data-color="#ffffff" style="background: #ffffff; border: 1px solid #ccc;" title="White"></div>
+                                <div class="inline-color-swatch" data-color="#a02020" style="background: #a02020;" title="Red"></div>
+                                <div class="inline-color-swatch" data-color="#d07020" style="background: #d07020;" title="Orange"></div>
+                                <div class="inline-color-swatch" data-color="#f0e050" style="background: #f0e050;" title="Yellow"></div>
+                                <div class="inline-color-swatch" data-color="#608050" style="background: #608050;" title="Green"></div>
+                                <div class="inline-color-swatch" data-color="#5080b8" style="background: #5080b8;" title="Blue"></div>
+                                <div class="inline-color-swatch" data-color="#68104D" style="background: #68104D;" title="Magenta"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <button class="inline-reset-btn" id="inlineResetSize" title="Reset to default size">↺</button>
+                            <input type="range" id="inlineWordSize" min="0.5" max="3" step="0.1" value="1" style="flex: 1;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedWord = null;
+        let wordStyles = {};
+        
+        // Color mapping: display colors (for preview/UI) to device colors (pure RGB for device)
+        const displayColors = {
+            '#000000': '#000000', // Black
+            '#ffffff': '#ffffff', // White
+            '#a02020': '#a02020', // Red (display)
+            '#d07020': '#d07020', // Orange (display)
+            '#f0e050': '#f0e050', // Yellow (display)
+            '#608050': '#608050', // Green (display)
+            '#5080b8': '#5080b8', // Blue (display)
+            '#68104D': '#68104D'  // Magenta (display)
+        };
+        
+        const deviceColors = {
+            '#000000': '#000000', // Black
+            '#ffffff': '#ffffff', // White
+            '#a02020': '#ff0000', // Red -> Pure Red
+            '#d07020': '#ff6000', // Orange -> Pure Orange
+            '#f0e050': '#ffff00', // Yellow -> Pure Yellow
+            '#608050': '#00ff00', // Green -> Pure Green
+            '#5080b8': '#0000ff', // Blue -> Pure Blue
+            '#68104D': '#781044'  // Magenta -> Pure Magenta
+        };
+        
+        // Helper function to convert display color to device color
+        function toDeviceColor(displayColor) {
+            if (!displayColor) return displayColor;
+            
+            // Normalize color to hex format
+            let normalizedColor = displayColor.toLowerCase().trim();
+            
+            // If it's an rgb() format, convert to hex
+            if (normalizedColor.startsWith('rgb')) {
+                const match = normalizedColor.match(/\d+/g);
+                if (match && match.length >= 3) {
+                    const r = parseInt(match[0]).toString(16).padStart(2, '0');
+                    const g = parseInt(match[1]).toString(16).padStart(2, '0');
+                    const b = parseInt(match[2]).toString(16).padStart(2, '0');
+                    normalizedColor = '#' + r + g + b;
+                }
+            }
+            
+            return deviceColors[normalizedColor] || displayColor;
+        }
+        
+        // Unified font configuration with available weights (load 400/700, apply 400/900)
+        const fontConfig = {
+            'Playfair Display': [400, 700],
+            'Space Mono': [400, 700],
+            'Merriweather': [400, 700],
+            'Poppins': [400, 700],
+            'Oswald': [400, 700],
+            'Raleway': [400, 700],
+            'Crimson Text': [400, 700],
+            'PT Serif': [400, 700],
+            'Cardo': [400, 700],
+            'Old Standard TT': [400, 700],
+            'Special Elite': [400],
+            'Orbitron': [400, 700],
+            'Abril Fatface': [400],
+            'Pacifico': [400],
+            'Great Vibes': [400],
+            'Allura': [400],
+            'Kaushan Script': [400],
+            'Satisfy': [400],
+            'Caveat': [400, 700],
+            'Amatic SC': [400, 700],
+            'Shadows Into Light': [400],
+            'Indie Flower': [400],
+            'Permanent Marker': [400],
+            'Fredoka One': [400],
+            'Bangers': [400],
+            'Lobster': [400],
+            'Righteous': [400],
+            'Griffy': [400],
+            'Fontdiner Swanky': [400],
+            'UnifrakturMaguntia': [400],
+            'MedievalSharp': [400],
+            'New Rocker': [400],
+            'Black Ops One': [400],
+            'Ubuntu': [400, 700],
+            'PT Sans': [400, 700],
+            'Rubik Glitch': [400],
+            'Jolly Lodger': [400],
+            'Risque': [400],
+            'Srisakdi': [400, 700],
+            'Kranky': [400],
+            'The Girl Next Door': [400],
+            'Anta': [400],
+            'Bad Script': [400],
+            'Playwrite NL': [400],
+            'Limelight': [400],
+        };
+        
+        // Get font names array for easy access
+        const availableFonts = Object.keys(fontConfig);
+        
+        // Function to generate complete Google Fonts URL from fontConfig
+        function generateGoogleFontsUrl() {
+            const fontFamilies = availableFonts.map(fontName => {
+                const weights = fontConfig[fontName];
+                const fontFamily = fontName.replace(/\s+/g, '+');
+                const weightsParam = weights.join(';');
+                return `family=${fontFamily}:wght@${weightsParam}`;
+            });
+            
+            return `https://fonts.googleapis.com/css2?${fontFamilies.join('&')}&display=swap`;
+        }
+        
+        // Function to load all Google Fonts
+        function loadAllGoogleFonts() {
+            const url = generateGoogleFontsUrl();
+            document.getElementById('googleFontsLink').href = url;
+        }
+
+        // Function to populate font select dropdown
+        function populateFontSelect() {
+            const $fontSelect = $('#fontSelect');
+            $fontSelect.empty();
+            
+            availableFonts.forEach(fontName => {
+                const option = $('<option>').val(fontName).text(fontName);
+                $fontSelect.append(option);
+            });
+        }
+
+        // Function to populate inline word font select dropdown
+        function populateInlineFontSelect() {
+            const $inlineFontSelect = $('#inlineWordFont');
+            $inlineFontSelect.empty();
+            
+            // Add default option
+            $inlineFontSelect.append('<option value="">Default font</option>');
+            
+            availableFonts.forEach(fontName => {
+                const option = $('<option>').val(fontName).text(fontName);
+                $inlineFontSelect.append(option);
+            });
+        }
+
+        // Array of initial quotes
+        const initialQuotes = [
+            "“You can do what you want with my music, but never make me boring” \n– Freddie Mercury",
+            "“Fuck literature.” \n– Ernest Hemingway",
+            "“I'm an instant star. Just add water and stir.” \n– David Bowie",
+            "“Jazz isn't dead. It just smells funny.” \n– Frank Zappa",
+            "“Anybody can play. The note is only 20 percent. The attitude of the motherfucker who plays it is 80 percent.” \n– Miles Davis",
+            "“Stop making up words! There is no such thing as gaslighting.” \n– Marka",
+            "“Ich dachte es hört irgendwann mal auf, dass es immer so ist wie es immer so ist” \n– Hina Fehrmann",
+            "“If anyone comes to me and does not hate father and mother, wife and children, brothers and sisters – yes, even their own life – such a person cannot be my disciple.” \n– Jesus Christ, Luke 14:26"
+        ];
+        
+        function setRandomInitialQuote() {
+            const randomQuote = initialQuotes[Math.floor(Math.random() * initialQuotes.length)];
+            $('#textInput').val(randomQuote);
+        }
+
+        $(document).ready(function() {
+            // Load all Google Fonts
+            loadAllGoogleFonts();
+            
+            // Populate font select dropdowns
+            populateFontSelect();
+            populateInlineFontSelect();
+            
+            // Set a random initial quote
+            setRandomInitialQuote();
+            
+            // Initialize with random design
+            randomizeDesign();
+            updateText();
+            
+            // Event listeners
+            $('#textInput').on('input', updateText);
+            $('#fontSelect').on('change', updateFont);
+            $('#fontSize').on('input', updateFontSize);
+            $('#randomizeFontBtn').on('click', randomizeFont);
+            // Bold and italic toggle buttons
+            $('#globalBoldBtn').on('click', function() {
+                $(this).toggleClass('active');
+                const isBold = $(this).hasClass('active');
+                $('#textContent').css('font-weight', isBold ? 900 : 400);
+            });
+
+            $('#globalItalicBtn').on('click', function() {
+                $(this).toggleClass('active');
+                const isItalic = $(this).hasClass('active');
+                $('#textContent').css('font-style', isItalic ? 'italic' : 'normal');
+            });
+            
+            // Color palette event listeners
+            $('#textColorSwatches .color-swatch').on('click', function() {
+                const color = $(this).data('color');
+                $('#textColorSwatches .color-swatch').removeClass('selected');
+                $(this).addClass('selected');
+                $('#textContent').css('color', color);
+                
+                // Update CSS custom property for automatic inheritance
+                document.documentElement.style.setProperty('--text-color', color);
+            });
+            
+            $('#bgColorSwatches .color-swatch').on('click', function() {
+                const color = $(this).data('color');
+                $('#bgColorSwatches .color-swatch').removeClass('selected');
+                $(this).addClass('selected');
+                $('#canvas').css('background-color', color);
+            });
+            
+            // Inline color swatches
+            $('#inlineWordStyling').on('click', '.inline-color-swatch', function() {
+                const color = $(this).data('color');
+                $('#inlineWordStyling .inline-color-swatch').removeClass('selected');
+                $(this).addClass('selected');
+                updateInlineWordStyle();
+            });
+            // Text alignment buttons
+            $('.align-btn').on('click', function() {
+                $('.align-btn').removeClass('active');
+                $(this).addClass('active');
+                const align = $(this).data('align');
+                $('#textContent').css('text-align', align);
+            });
+            
+            
+            // Inline word styling controls
+            $('#inlineWordFont').on('change', updateInlineWordStyle);
+            
+            // Inline reset buttons
+            $('#inlineResetFont').on('click', function() {
+                $('#inlineWordFont').val('');
+                updateInlineWordStyle();
+            });
+            
+            $('#inlineRandomFont').on('click', function() {
+                const randomFont = availableFonts[Math.floor(Math.random() * availableFonts.length)];
+                $('#inlineWordFont').val(randomFont);
+                updateInlineWordStyle();
+            });
+            
+            $('#inlineResetColor').on('click', function() {
+                $('#inlineWordStyling .inline-color-swatch').removeClass('selected');
+                updateInlineWordStyle();
+            });
+            
+            $('#inlineResetSize').on('click', function() {
+                $('#inlineWordSize').val(1);
+                updateInlineWordStyle();
+            });
+            
+            // Inline bold and italic toggle buttons
+            $('#inlineBoldBtn').on('click', function() {
+                const isBold = $(this).hasClass('active');
+                $(this).data('bold', !isBold);
+                $(this).toggleClass('active');
+                updateInlineWordStyle();
+            });
+
+            $('#inlineItalicBtn').on('click', function() {
+                const isItalic = $(this).hasClass('active');
+                $(this).data('italic', !isItalic);
+                $(this).toggleClass('active');
+                updateInlineWordStyle();
+            });
+
+            $('#inlineResetStyle').on('click', function() {
+                $('#inlineBoldBtn').data('bold', null).removeClass('active');
+                $('#inlineItalicBtn').data('italic', null).removeClass('active');
+                updateInlineWordStyle();
+            });
+            
+            // Font size slider with snap to 1
+            $('#inlineWordSize').on('input', function() {
+                let value = parseFloat($(this).val());
+                // Snap to 1 when close (within 0.1)
+                if (Math.abs(value - 1) < 0.1) {
+                    value = 1;
+                    $(this).val(1);
+                }
+                updateInlineWordStyle();
+            });
+            
+            
+            $('#randomizeBtn').on('click', randomizeDesign);
+            $('#exportBtn').on('click', sendToDisplay);
+            $('#downloadBtn').on('click', downloadPNG);
+            
+            
+            
+            // Hide word styling when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.word, #inlineWordStyling').length) {
+                    $('.word').removeClass('selected');
+                    selectedWord = null;
+                    $('#inlineWordStyling').removeClass('active');
+                }
+            });
+            
+            // Update font sizes when window is resized
+            $(window).on('resize', function() {
+                updateFontSize();
+            });
+        });
+
+        function updateText() {
+            const text = $('#textInput').val();
+            const $textContent = $('#textContent');
+            
+            $textContent.empty();
+            
+            // Split by line breaks first, then process each line
+            const lines = text.split('\n');
+            let wordIndex = 0;
+            
+            lines.forEach((line, lineIndex) => {
+                if (lineIndex > 0) {
+                    // Add line break between lines
+                    $textContent.append('<br>');
+                }
+                
+                // Split line into words and spaces
+                const words = line.split(/(\s+)/);
+                
+                words.forEach((word) => {
+                    if (word.trim()) {
+                        const $word = $('<span class="word">').text(word);
+                        $word.attr('data-word-index', wordIndex);
+                        $word.on('click', function(e) {
+                            e.stopPropagation();
+                            selectWord($(this));
+                        });
+                        $textContent.append($word);
+                        wordIndex++;
+                    } else {
+                        // Preserve spaces
+                        $textContent.append(word);
+                    }
+                });
+            });
+            
+            // Apply existing word styles
+            applyAllWordStyles();
+            
+            // Only auto-adjust during text changes, not manual font size changes
+        }
+
+        function autoAdjustTextSize() {
+            const $textContent = $('#textContent');
+            const $canvas = $('#canvas');
+            const canvasWidth = $canvas.width();
+            const canvasHeight = $canvas.height();
+            
+            let fontSize = parseFloat($('#fontSize').val()) || 48;
+            let attempts = 0;
+            const maxAttempts = 15;
+            
+            while (attempts < maxAttempts) {
+                // Calculate the actual rendered font size using the proportional formula
+                const renderedSize = (fontSize * canvasWidth) / 800;
+                $textContent.css('font-size', renderedSize + 'px');
+                
+                // Check if text overflows
+                const textWidth = $textContent[0].scrollWidth;
+                const textHeight = $textContent[0].scrollHeight;
+                
+                // Only check width constraint, allow text to flow naturally with height
+                if (textWidth <= canvasWidth && textHeight <= canvasHeight * 1.05) {
+                    break;
+                }
+                
+                fontSize *= 0.95;
+                attempts++;
+            }
+            
+            // Update the font size slider to match the adjusted size
+            $('#fontSize').val(Math.round(fontSize));
+            
+            // Reapply word styles with new base size
+            applyAllWordStyles();
+        }
+
+        function selectWord($word) {
+            $('.word').removeClass('selected');
+            $word.addClass('selected');
+            selectedWord = $word;
+            
+            // Load current word styles
+            const wordIndex = $word.attr('data-word-index');
+            const styles = wordStyles[wordIndex] || {};
+            
+            // Show inline word styling above the word
+            showInlineWordStyling($word, styles);
+        }
+
+        function showInlineWordStyling($word, styles) {
+            const $inlineStyling = $('#inlineWordStyling');
+            
+            // Position the inline styling in the furthest corner of the canvas
+            const canvasWidth = $('#canvas').width();
+            const canvasHeight = $('#canvas').height();
+            
+            // Calculate which corner is furthest from the word
+            const wordOffset = $word.offset();
+            const canvasOffset = $('#canvas').offset();
+            const wordLeft = wordOffset.left - canvasOffset.left + ($word.width() / 2);
+            const wordTop = wordOffset.top - canvasOffset.top;
+            
+            // Calculate distances to each corner
+            const topLeft = Math.sqrt(wordLeft * wordLeft + wordTop * wordTop);
+            const topRight = Math.sqrt((canvasWidth - wordLeft) * (canvasWidth - wordLeft) + wordTop * wordTop);
+            const bottomLeft = Math.sqrt(wordLeft * wordLeft + (canvasHeight - wordTop) * (canvasHeight - wordTop));
+            const bottomRight = Math.sqrt((canvasWidth - wordLeft) * (canvasWidth - wordLeft) + (canvasHeight - wordTop) * (canvasHeight - wordTop));
+            
+            // Find the furthest corner
+            const maxDistance = Math.max(topLeft, topRight, bottomLeft, bottomRight);
+            let left, top;
+            
+            // Get the actual dimensions of the inline styling element
+            const inlineStylingHeight = $inlineStyling.outerHeight() || 180; // fallback to 180 if not available
+            const inlineStylingWidth = $inlineStyling.outerWidth() || 210; // fallback to 210 if not available
+            
+            // Use a consistent offset from edges
+            const offset = 10;
+            
+            if (maxDistance === topRight) {
+                // Top right corner
+                left = canvasWidth - inlineStylingWidth - offset;
+                top = offset;
+            } else if (maxDistance === bottomLeft) {
+                // Bottom left corner
+                left = offset;
+                top = canvasHeight - inlineStylingHeight - offset;
+            } else if (maxDistance === bottomRight) {
+                // Bottom right corner
+                left = canvasWidth - inlineStylingWidth - offset;
+                top = canvasHeight - inlineStylingHeight - offset;
+            } else {
+                // Top left corner (default)
+                left = offset;
+                top = offset;
+            }
+            
+            $inlineStyling.css({
+                'left': left + 'px',
+                'top': top + 'px'
+            });
+            
+            // Load styles into inline controls
+            $('#inlineWordFont').val(styles.font || '');
+            $('#inlineWordSize').val(styles.size || 1);
+            
+            // Set bold and italic states with three-state logic
+            // Explicitly use null for undefined to indicate "inherit from parent"
+            $('#inlineBoldBtn').data('bold', styles.bold === undefined ? null : styles.bold);
+            if (styles.bold === true) {
+                $('#inlineBoldBtn').addClass('active');
+            } else {
+                $('#inlineBoldBtn').removeClass('active');
+            }
+            
+            $('#inlineItalicBtn').data('italic', styles.italic === undefined ? null : styles.italic);
+            if (styles.italic === true) {
+                $('#inlineItalicBtn').addClass('active');
+            } else {
+                $('#inlineItalicBtn').removeClass('active');
+            }
+            
+            // Set color selection - default to no selection if no specific color set
+            $('#inlineWordStyling .inline-color-swatch').removeClass('selected');
+            const color = styles.color || '';
+            if (color) {
+                const $matchingSwatch = $(`#inlineWordStyling .inline-color-swatch[data-color="${color}"]`);
+                if ($matchingSwatch.length > 0) {
+                    $matchingSwatch.addClass('selected');
+                }
+            }
+            
+            $inlineStyling.addClass('active');
+        }
+
+
+        function updateInlineWordStyle() {
+            if (!selectedWord) return;
+            
+            const wordIndex = selectedWord.attr('data-word-index');
+            const font = $('#inlineWordFont').val();
+            // Get the three-state value: null (inherit), true (active), false (inactive)
+            const boldData = $('#inlineBoldBtn').data('bold');
+            const italicData = $('#inlineItalicBtn').data('italic');
+            const bold = $('#inlineBoldBtn').hasClass('active') ? true : (boldData === false ? false : null);
+            const italic = $('#inlineItalicBtn').hasClass('active') ? true : (italicData === false ? false : null);
+            const color = $('#inlineWordStyling .inline-color-swatch.selected').data('color') || '';
+            const size = parseFloat($('#inlineWordSize').val());
+            
+            // Store styles
+            wordStyles[wordIndex] = { font, bold, italic, color, size };
+            
+            // Apply styles
+            applyWordStyle(selectedWord, wordStyles[wordIndex]);
+        }
+
+        function updateInlineWordSize() {
+            updateInlineWordStyle();
+        }
+
+        function applyWordStyle($word, styles) {
+            if (styles.font) {
+                $word.css('font-family', `"${styles.font}", serif`);
+            } else {
+                // Reset to default font
+                $word.css('font-family', '');
+            }
+            // Three-state bold: null (inherit), true (bold 900), false (normal 400)
+            if (styles.bold === true) {
+                $word.css('font-weight', '900');
+            } else if (styles.bold === false) {
+                $word.css('font-weight', '400');
+            } else {
+                // null = inherit from parent
+                $word.css('font-weight', '');
+            }
+            // Three-state italic: null (inherit), true (italic), false (normal)
+            if (styles.italic === true) {
+                $word.css('font-style', 'italic');
+            } else if (styles.italic === false) {
+                $word.css('font-style', 'normal');
+            } else {
+                // null = inherit from parent
+                $word.css('font-style', '');
+            }
+            if (styles.color) {
+                $word.css('color', styles.color);
+            } else {
+                // Use CSS custom property for automatic inheritance
+                $word.css('color', 'var(--text-color)');
+            }
+            if (styles.size) {
+                const baseSize = parseFloat($('#fontSize').val()) || 48;
+                const canvasWidth = $('#canvas').width();
+                const relativeSize = (baseSize * styles.size * canvasWidth) / 800; // Scale relative to 800px base width
+                $word.css('font-size', relativeSize + 'px');
+            } else {
+                // Reset to default size
+                $word.css('font-size', '');
+            }
+        }
+
+        function applyAllWordStyles() {
+            $('.word').each(function() {
+                const $word = $(this);
+                const wordIndex = $word.attr('data-word-index');
+                const styles = wordStyles[wordIndex];
+                if (styles) {
+                    applyWordStyle($word, styles);
+                }
+            });
+        }
+
+        function updateFont() {
+            const font = $('#fontSelect').val();
+            $('#textContent').css('font-family', `"${font}", serif`);
+        }
+
+        function updateFontSize() {
+            const size = $('#fontSize').val();
+            const canvasWidth = $('#canvas').width();
+            const relativeSize = (size * canvasWidth) / 800; // Scale relative to 800px base width
+            $('#textContent').css('font-size', relativeSize + 'px');
+            
+            // Reapply word styles with new base size
+            applyAllWordStyles();
+        }
+
+        function updateFontWeight() {
+            const weight = $('#fontWeight').val();
+            $('#textContent').css('font-weight', weight);
+        }
+
+
+        function updateTextAlign() {
+            const align = $('#textAlign').val();
+            $('#textContent').css('text-align', align);
+        }
+
+
+        function randomizeFont() {
+            // Random font only
+            const randomFont = availableFonts[Math.floor(Math.random() * availableFonts.length)];
+            $('#fontSelect').val(randomFont);
+            updateFont();
+        }
+
+        function randomizeDesign() {
+            // Random font
+            const randomFont = availableFonts[Math.floor(Math.random() * availableFonts.length)];
+            $('#fontSelect').val(randomFont);
+            updateFont();
+            
+            // Random font size
+            const randomSize = Math.floor(Math.random() * 60) + 24; // 24-84px
+            $('#fontSize').val(randomSize);
+            updateFontSize();
+            
+            // Random bold and italic
+            const randomBold = Math.random() > 0.5;
+            const randomItalic = Math.random() > 0.5;
+            
+            $('#globalBoldBtn').data('bold', randomBold ? 'true' : 'false');
+            if (randomBold) {
+                $('#globalBoldBtn').addClass('active');
+                $('#textContent').css('font-weight', '900');
+            } else {
+                $('#globalBoldBtn').removeClass('active');
+                $('#textContent').css('font-weight', '400');
+            }
+            
+            $('#globalItalicBtn').data('italic', randomItalic ? 'true' : 'false');
+            if (randomItalic) {
+                $('#globalItalicBtn').addClass('active');
+                $('#textContent').css('font-style', 'italic');
+            } else {
+                $('#globalItalicBtn').removeClass('active');
+                $('#textContent').css('font-style', 'normal');
+            }
+            
+            // Random colors from palette - ensure text and background are different
+            const paletteColors = ['#000000', '#ffffff', '#a02020', '#d07020', '#f0e050', '#608050', '#5080b8', '#68104D'];
+            const randomTextColor = paletteColors[Math.floor(Math.random() * paletteColors.length)];
+            let randomBgColor;
+            do {
+                randomBgColor = paletteColors[Math.floor(Math.random() * paletteColors.length)];
+            } while (randomBgColor === randomTextColor);
+            
+            // Update text color selection
+            $('#textColorSwatches .color-swatch').removeClass('selected');
+            $(`#textColorSwatches .color-swatch[data-color="${randomTextColor}"]`).addClass('selected');
+            $('#textContent').css('color', randomTextColor);
+            
+            // Update CSS custom property for automatic inheritance
+            document.documentElement.style.setProperty('--text-color', randomTextColor);
+            
+            // Update background color selection
+            $('#bgColorSwatches .color-swatch').removeClass('selected');
+            $(`#bgColorSwatches .color-swatch[data-color="${randomBgColor}"]`).addClass('selected');
+            $('#canvas').css('background-color', randomBgColor);
+            
+            // Random text alignment
+            const alignments = ['left', 'center', 'right'];
+            const randomAlign = alignments[Math.floor(Math.random() * alignments.length)];
+            $('.align-btn').removeClass('active');
+            $(`.align-btn[data-align="${randomAlign}"]`).addClass('active');
+            $('#textContent').css('text-align', randomAlign);
+            
+            
+            // Auto-adjust text size after randomization
+            setTimeout(autoAdjustTextSize, 100);
+        }
+
+
+        function generateImage(useDeviceColors = false) {
+            const canvas = document.getElementById('canvas');
+            
+            return new Promise((resolve, reject) => {
+                // Create a temporary container with the exact export dimensions
+            const tempContainer = document.createElement('div');
+            tempContainer.style.position = 'absolute';
+            tempContainer.style.left = '-9999px';
+            tempContainer.style.width = '1600px';
+            tempContainer.style.height = '1200px';
+            
+            // Convert background color if needed
+            let bgColor = canvas.style.backgroundColor || '#ffffff';
+            if (useDeviceColors) {
+                bgColor = toDeviceColor(bgColor);
+            }
+            tempContainer.style.background = bgColor;
+            
+            tempContainer.style.display = 'flex';
+            tempContainer.style.alignItems = 'center';
+            tempContainer.style.justifyContent = 'center';
+            tempContainer.style.padding = '0';
+            
+            // Clone the text content
+            const textClone = document.getElementById('textContent').cloneNode(true);
+            textClone.style.fontFamily = document.getElementById('textContent').style.fontFamily;
+            textClone.style.fontSize = document.getElementById('textContent').style.fontSize;
+            textClone.style.fontWeight = document.getElementById('textContent').style.fontWeight;
+            
+            // Convert text color if needed
+            let textColor = document.getElementById('textContent').style.color;
+            if (useDeviceColors) {
+                textColor = toDeviceColor(textColor);
+            }
+            textClone.style.color = textColor;
+            
+            textClone.style.textAlign = document.getElementById('textContent').style.textAlign;
+            textClone.style.maxWidth = '95%';
+            textClone.style.wordWrap = 'break-word';
+            textClone.style.lineHeight = '1.6';
+            
+            // Scale the font size proportionally for 1600x1200
+            // Use the base font size from the slider, not the current scaled size
+            const baseFontSize = parseFloat($('#fontSize').val()) || 48;
+            const scaleFactor = 1600 / 800; // Scale from 800px width to 1600px
+            textClone.style.fontSize = (baseFontSize * scaleFactor) + 'px';
+            
+            // Scale all word-specific font sizes using the same base size
+            // Also convert word-specific colors if needed
+            const words = textClone.querySelectorAll('.word');
+            words.forEach(function(word) {
+                const wordIndex = word.getAttribute('data-word-index');
+                const styles = wordStyles[wordIndex];
+                if (styles) {
+                    if (styles.size) {
+                        const scaledSize = (baseFontSize * styles.size * scaleFactor) + 'px';
+                        word.style.fontSize = scaledSize;
+                    }
+                    if (useDeviceColors && styles.color) {
+                        word.style.color = toDeviceColor(styles.color);
+                    }
+                }
+            });
+            
+            tempContainer.appendChild(textClone);
+            document.body.appendChild(tempContainer);
+            
+            // Use html2canvas to capture the image
+            html2canvas(tempContainer, {
+                width: 1600,
+                height: 1200,
+                scale: 1,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: canvas.style.backgroundColor || '#ffffff'
+            }).then(function(canvas) {
+                // Clean up
+                document.body.removeChild(tempContainer);
+                resolve(canvas);
+            }).catch(function(error) {
+                console.error('Export failed:', error);
+                alert('Export failed. Please try again.');
+                
+                // Clean up
+                document.body.removeChild(tempContainer);
+                reject(error);
+            });
+            });
+        }
+
+        function sendToDisplay() {
+            const exportBtn = document.getElementById('exportBtn');
+            
+            // Show loading state
+            exportBtn.textContent = '⏳ Sending...';
+            exportBtn.disabled = true;
+            
+            // Generate image with device colors
+            generateImage(true).then(function(canvas) {
+                // Convert canvas to blob and send to server
+                canvas.toBlob(function(blob) {
+                    const formData = new FormData();
+                    formData.append('file', blob, 'typography-layout.png');
+                    
+                    fetch('/display/upload', {
+                        method: 'POST',
+                        body: formData
+                    }).then(function(response) {
+                        if (response.ok) {
+                            exportBtn.textContent = '✅ Sent to Display!';
+                            setTimeout(() => {
+                                exportBtn.textContent = '📸 Send to Display';
+                                exportBtn.disabled = false;
+                            }, 2000);
+                        } else {
+                            throw new Error('Failed to send image to display');
+                        }
+                    }).catch(function(error) {
+                        console.error('Failed to send image:', error);
+                        alert('Failed to send image to display. Please try again.');
+                        exportBtn.textContent = '📸 Send to Display';
+                        exportBtn.disabled = false;
+                    });
+                }, 'image/png');
+            }).catch(function(error) {
+                console.error('Failed to generate image:', error);
+                exportBtn.textContent = '📸 Send to Display';
+                exportBtn.disabled = false;
+            });
+        }
+
+        function downloadPNG() {
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            // Show loading state
+            downloadBtn.textContent = '⏳ Generating...';
+            downloadBtn.disabled = true;
+            
+            generateImage().then(function(canvas) {
+                // Create download link
+                const link = document.createElement('a');
+                link.download = 'typography-layout-' + new Date().getTime() + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                // Reset button
+                downloadBtn.textContent = '💾 Download PNG';
+                downloadBtn.disabled = false;
+            }).catch(function(error) {
+                console.error('Failed to generate image:', error);
+                downloadBtn.textContent = '💾 Download PNG';
+                downloadBtn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
