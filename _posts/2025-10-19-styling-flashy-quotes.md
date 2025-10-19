@@ -85,11 +85,12 @@ styler) so far:
 
 ![](/assets/images/e-ink-text-layout/dog-park.jpg)
 
-A paragraph from the first episode of Welcome To Night Vale, typeset with the layout tool
+A paragraph from the first episode of Welcome To Night Vale, typeset with the
+layout tool
 
 ![](/assets/images/e-ink-text-layout/fuck-literature.jpg)
 
-"Fuck Literature", a quote by Ernest Hemingway
+"Fuck Literature", a quote by Ernest Hemingway, typeset with the layout tool
 
 ![](/assets/images/e-ink-text-layout/gunnerkrigg-illustration.jpg)
 
@@ -100,7 +101,10 @@ an excellent webcomic
 
 ![](/assets/images/e-ink-text-layout/color-chart.jpg)
 
-A color chart, showing that dark colors are displayed more reliably than light ones
+A color chart, showing that dark colors are displayed more reliably than light
+ones
+
+That's all, thanks, bye!
 
 [^color-mapping]: I ended up needing to create a basic color mapping, with one set of RGB colors for displaying on the web frontend mapped to a different set of RGB values to actually get a perceptual match on the e-ink screen. Telling the screen to show <span style="color: #00FF00">█████</span> results in a color best approximated by <span style="color: #608050">█████</span>.
 
