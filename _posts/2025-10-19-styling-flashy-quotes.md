@@ -84,18 +84,22 @@ Here's a small selection of what I've done with the screen (and the quote
 styler) so far:
 
 ![](/assets/images/e-ink-text-layout/dog-park.jpg){: width="250" }
+
 A paragraph from the first episode of Welcome To Night Vale, typeset with the layout tool
 
 ![](/assets/images/e-ink-text-layout/fuck-literature.jpg){: width="250" }
+
 "Fuck Literature", a quote by Ernest Hemingway
 
 ![](/assets/images/e-ink-text-layout/gunnerkrigg-illustration.jpg){: width="250" }
+
 An illustration from [Gunnerkrigg Court](https://www.gunnerkrigg.com/?p=1),
 an excellent webcomic
 
 ![A black-and-white technical drawing explaning ISO216 paper sizes](/assets/images/e-ink-text-layout/iso-paper.jpg){: width="250" }
 
 ![](/assets/images/e-ink-text-layout/color-chart.jpg){: width="250" }
+
 A color chart, showing that dark colors are displayed more reliably than light ones
 
 [^color-mapping]: I ended up needing to create a basic color mapping, with one set of RGB colors for displaying on the web frontend mapped to a different set of RGB values to actually get a perceptual match on the e-ink screen. Telling the screen to show <span style="color: #00FF00">█████</span> results in a color best approximated by <span style="color: #608050">█████</span>.
