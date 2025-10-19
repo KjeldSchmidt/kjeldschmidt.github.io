@@ -91,24 +91,27 @@ styler) so far:
 ![](/assets/images/e-ink-text-layout/dog-park.jpg)
 
 A paragraph from the first episode of Welcome To Night Vale, typeset with the
-layout tool{: style="font-size: 80%; text-align: center;"}
+layout tool
+{: style="font-size: 80%; text-align: center;"}
 
 ![](/assets/images/e-ink-text-layout/fuck-literature.jpg)
 
-"Fuck Literature", a quote by Ernest Hemingway, typeset with the layout
-tool{: style="font-size: 80%; text-align: center;"}
+"Fuck Literature", a quote by Ernest Hemingway, typeset with the layout tool
+{: style="font-size: 80%; text-align: center;"}
 
 ![](/assets/images/e-ink-text-layout/gunnerkrigg-illustration.jpg)
 
 An illustration from [Gunnerkrigg Court](https://www.gunnerkrigg.com/?p=1),
-an excellent webcomic{: style="font-size: 80%; text-align: center;"}
+an excellent webcomic
+{: style="font-size: 80%; text-align: center;"}
 
 ![A black-and-white technical drawing explaning ISO216 paper sizes](/assets/images/e-ink-text-layout/iso-paper.jpg)
 
 ![](/assets/images/e-ink-text-layout/color-chart.jpg)
 
 A color chart, showing that dark colors are displayed more reliably thanlight
-ones{: style="font-size: 80%; text-align: center;"}
+ones
+{: style="font-size: 80%; text-align: center;"}
 
 That's all, thanks, bye!
 
