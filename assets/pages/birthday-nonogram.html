@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Geburtstags-Nonogramm</title>
+<meta name="viewport" content="width=1024">
+<meta name="description" content="Ein 30x30 Nonogramm-Rätsel">
+<style>
+  html, body {
+    background: #111;
+    color: #ccc;
+    font-family: monospace, monospace;
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: contain;
+  }
+
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  button {
+    background: #000;
+    color: #ccc;
+    border: 1px solid #666;
+    font-family: monospace, monospace;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 12px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  button:active { background: #222; }
+  button.active { background: #2a2a2a; border-color: #aaa; color: #fff; }
+
+  .status {
+    color: #6c6;
+    font-size: 14px;
+    padding: 4px 8px;
+    min-height: 1.2em;
+    font-weight: bold;
+  }
+
+  .hint {
+    color: #777;
+    font-size: 12px;
+    text-align: center;
+    padding: 0 8px 8px;
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    width: 100%;
+    max-width: 100vmin;
+    margin: 0 auto;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  .corner { background: transparent; }
+
+  .col-clues {
+    display: grid;
+    grid-template-columns: repeat(30, 1fr);
+    align-items: end;
+  }
+
+  .row-clues {
+    display: grid;
+    grid-template-rows: repeat(30, 1fr);
+  }
+
+  .col-clue, .row-clue {
+    color: #aaa;
+    font-size: clamp(7px, 1.4vmin, 11px);
+    line-height: 1.1;
+    box-sizing: border-box;
+  }
+
+  .col-clue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1px 0 2px;
+    border-left: 1px solid transparent;
+  }
+  .col-clue.thick-left { border-left-color: #555; }
+
+  .row-clue {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.4em;
+    padding: 0 4px 0 2px;
+    white-space: nowrap;
+    border-top: 1px solid transparent;
+  }
+  .row-clue.thick-top { border-top-color: #555; }
+
+  .col-clue span, .row-clue span {
+    cursor: pointer;
+    padding: 1px 2px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .col-clue span.struck, .row-clue span.struck {
+    color: #444;
+    text-decoration: line-through;
+  }
+  .col-clue.done, .row-clue.done { color: #444; }
+  .col-clue.done span, .row-clue.done span { text-decoration: line-through; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(30, 1fr);
+    grid-template-rows: repeat(30, 1fr);
+    aspect-ratio: 1;
+    width: 100%;
+    touch-action: pinch-zoom;
+    border-top: 1px solid #888;
+    border-left: 1px solid #888;
+    background: #1a1a1a;
+    position: relative;
+    --hover-r: 0;
+    --hover-c: 0;
+  }
+
+  .hover-row, .hover-col {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(255, 220, 120, 0.10);
+    display: none;
+    z-index: 1;
+  }
+  .hover-row {
+    left: 0;
+    right: 0;
+    top: calc(var(--hover-r) * (100% / 30));
+    height: calc(100% / 30);
+  }
+  .hover-col {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--hover-c) * (100% / 30));
+    width: calc(100% / 30);
+  }
+  .grid.hover-active .hover-row,
+  .grid.hover-active .hover-col { display: block; }
+
+  .col-clue.hover, .row-clue.hover {
+    color: #fff;
+    background: rgba(255, 220, 120, 0.08);
+  }
+
+  .cell {
+    background: #1a1a1a;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
+    position: relative;
+  }
+
+  .cell.thick-right { border-right-color: #666; }
+  .cell.thick-bottom { border-bottom-color: #666; }
+
+  .cell.filled { background: #ddd; }
+
+  .cell.marked::before, .cell.marked::after {
+    content: '';
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    top: 50%;
+    border-top: 1px solid #c66;
+  }
+  .cell.marked::before { transform: rotate(45deg); }
+  .cell.marked::after  { transform: rotate(-45deg); }
+
+  .board.won .cell.filled { background: #6c6; }
+  .board.won { animation: winpulse 0.6s ease-out; }
+  @keyframes winpulse {
+    0%   { filter: brightness(1); }
+    50%  { filter: brightness(1.6); }
+    100% { filter: brightness(1); }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <button id="tool-fill" class="active" type="button">Füllen</button>
+  <button id="tool-mark" type="button">Markieren</button>
+  <button id="reset-btn" type="button">Zurücksetzen</button>
+  <span class="status" id="status"></span>
+</div>
+<div class="hint">Tippen oder wischen zum Malen. Werkzeug oben auswählen. Rechtsklick tauscht das Werkzeug für einen Strich.</div>
+
+<div class="board" id="board">
+  <div class="corner"></div>
+  <div class="col-clues" id="col-clues"></div>
+  <div class="row-clues" id="row-clues"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+"use strict";
+
+const SOLUTION = [
+  "#..#..##..#..#..##...###..#..#",
+  "#..#.#..#.#..#.#..#..#..#.#..#",
+  "####.####.####.####..#..#.#..#",
+  "#..#.#..#.#..#.#..#..#..#.#..#",
+  "#..#.#..#.#..#.#..#..###...##.",
+  "..............................",
+  "..............................",
+  "..............................",
+  "###..#..###.###.....##..#..###",
+  "#..#.#.#.....#.....#..#.#...#.",
+  "###..#..##...#.....####.#...#.",
+  "#..#.#....#..#.....#..#.#...#.",
+  "###..#.###...#.....#..#.###.#.",
+  "..............................",
+  "..............................",
+  "..............................",
+  ".#.#..#.#..#.###....###..#.###",
+  "#..#..#.##.#.#..#...#..#.#.#..",
+  "#..#..#.#.##.#..#...#..#.#.##.",
+  "#..#..#.#..#.#..#...#..#.#.#..",
+  ".#..##..#..#.###....###..#.###",
+  "..............................",
+  "..............................",
+  "..............................",
+  "###..###..###.###.###.#...#.#.",
+  "#..#.#...#.....#..#....#.#.#.#",
+  "###..##...##...#..##...#.#...#",
+  "#..#.#......#..#..#....#..#.#.",
+  "###..###.###...#..###.#....#..",
+  "..............................",
+];
+
+const N = SOLUTION.length;
+const TOTAL = N * N;
+
+const STATE_EMPTY = 0, STATE_FILLED = 1, STATE_MARKED = 2;
+
+function computeClues(line) {
+  const out = [];
+  let run = 0;
+  for (let i = 0; i < line.length; i++) {
+    if (line[i]) run++;
+    else if (run > 0) { out.push(run); run = 0; }
+  }
+  if (run > 0) out.push(run);
+  return out.length ? out : [0];
+}
+
+const solutionBits = new Uint8Array(TOTAL);
+for (let r = 0; r < N; r++) {
+  for (let c = 0; c < N; c++) {
+    solutionBits[r * N + c] = SOLUTION[r][c] === '#' ? 1 : 0;
+  }
+}
+
+const rowClues = [];
+const colClues = [];
+for (let r = 0; r < N; r++) {
+  const row = new Array(N);
+  for (let c = 0; c < N; c++) row[c] = solutionBits[r * N + c];
+  rowClues.push(computeClues(row));
+}
+for (let c = 0; c < N; c++) {
+  const col = new Array(N);
+  for (let r = 0; r < N; r++) col[r] = solutionBits[r * N + c];
+  colClues.push(computeClues(col));
+}
+
+const state = new Uint8Array(TOTAL);
+
+const board       = document.getElementById('board');
+const grid        = document.getElementById('grid');
+const colCluesEl  = document.getElementById('col-clues');
+const rowCluesEl  = document.getElementById('row-clues');
+const toolFillBtn = document.getElementById('tool-fill');
+const toolMarkBtn = document.getElementById('tool-mark');
+const resetBtn    = document.getElementById('reset-btn');
+const statusEl    = document.getElementById('status');
+
+let tool = 'fill';
+
+function nextStateFor(current, t) {
+  if (t === 'fill') return current === STATE_FILLED ? STATE_EMPTY : STATE_FILLED;
+  return current === STATE_MARKED ? STATE_EMPTY : STATE_MARKED;
+}
+
+function buildClues() {
+  for (let c = 0; c < N; c++) {
+    const el = document.createElement('div');
+    el.className = 'col-clue' + ((c % 5 === 0 && c !== 0) ? ' thick-left' : '');
+    for (const n of colClues[c]) {
+      const s = document.createElement('span');
+      s.textContent = n;
+      el.appendChild(s);
+    }
+    colCluesEl.appendChild(el);
+  }
+  for (let r = 0; r < N; r++) {
+    const el = document.createElement('div');
+    el.className = 'row-clue' + ((r % 5 === 0 && r !== 0) ? ' thick-top' : '');
+    for (const n of rowClues[r]) {
+      const s = document.createElement('span');
+      s.textContent = n;
+      el.appendChild(s);
+    }
+    rowCluesEl.appendChild(el);
+  }
+}
+
+function buildGrid() {
+  const frag = document.createDocumentFragment();
+  for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      const cell = document.createElement('div');
+      let cls = 'cell';
+      if ((c + 1) % 5 === 0 && c !== N - 1) cls += ' thick-right';
+      if ((r + 1) % 5 === 0 && r !== N - 1) cls += ' thick-bottom';
+      cell.className = cls;
+      cell.dataset.idx = r * N + c;
+      cell.dataset.r = r;
+      cell.dataset.c = c;
+      frag.appendChild(cell);
+    }
+  }
+  grid.appendChild(frag);
+  const hr = document.createElement('div'); hr.className = 'hover-row'; grid.appendChild(hr);
+  const hc = document.createElement('div'); hc.className = 'hover-col'; grid.appendChild(hc);
+}
+
+let hoverR = -1, hoverC = -1;
+function setHover(r, c) {
+  if (r === hoverR && c === hoverC) return;
+  if (hoverR >= 0) rowCluesEl.children[hoverR].classList.remove('hover');
+  if (hoverC >= 0) colCluesEl.children[hoverC].classList.remove('hover');
+  hoverR = r;
+  hoverC = c;
+  if (r >= 0 && c >= 0) {
+    grid.style.setProperty('--hover-r', r);
+    grid.style.setProperty('--hover-c', c);
+    grid.classList.add('hover-active');
+    rowCluesEl.children[r].classList.add('hover');
+    colCluesEl.children[c].classList.add('hover');
+  } else {
+    grid.classList.remove('hover-active');
+  }
+}
+function clearHover() { setHover(-1, -1); }
+
+function applyState(idx, newState) {
+  if (state[idx] === newState) return false;
+  state[idx] = newState;
+  const cell = grid.children[idx];
+  cell.classList.toggle('filled', newState === STATE_FILLED);
+  cell.classList.toggle('marked', newState === STATE_MARKED);
+  return true;
+}
+
+function filledRunsRow(r) {
+  const line = new Array(N);
+  for (let c = 0; c < N; c++) line[c] = state[r * N + c] === STATE_FILLED ? 1 : 0;
+  return computeClues(line);
+}
+function filledRunsCol(c) {
+  const line = new Array(N);
+  for (let r = 0; r < N; r++) line[r] = state[r * N + c] === STATE_FILLED ? 1 : 0;
+  return computeClues(line);
+}
+function arrEq(a, b) {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+function updateRowDone(r) {
+  rowCluesEl.children[r].classList.toggle('done', arrEq(filledRunsRow(r), rowClues[r]));
+}
+function updateColDone(c) {
+  colCluesEl.children[c].classList.toggle('done', arrEq(filledRunsCol(c), colClues[c]));
+}
+
+function checkWin() {
+  for (let i = 0; i < TOTAL; i++) {
+    const filled = state[i] === STATE_FILLED ? 1 : 0;
+    if (filled !== solutionBits[i]) {
+      board.classList.remove('won');
+      statusEl.textContent = '';
+      return;
+    }
+  }
+  board.classList.add('won');
+  statusEl.textContent = 'Gelöst!';
+}
+
+let dragging = false;
+let fromState = 0;
+let targetState = 0;
+let activePointerId = null;
+let strokeTool = 'fill';
+const touchedRows = new Set();
+const touchedCols = new Set();
+
+function cellFromPoint(x, y) {
+  const el = document.elementFromPoint(x, y);
+  if (!el || !el.classList) return null;
+  return el.classList.contains('cell') ? el : null;
+}
+
+function paintCell(cell) {
+  const idx = +cell.dataset.idx;
+  if (state[idx] !== fromState) return;
+  if (applyState(idx, targetState)) {
+    touchedRows.add(+cell.dataset.r);
+    touchedCols.add(+cell.dataset.c);
+  }
+}
+
+grid.addEventListener('pointerdown', (e) => {
+  const cell = e.target.closest && e.target.closest('.cell');
+  if (!cell) return;
+  e.preventDefault();
+  strokeTool = (e.button === 2) ? (tool === 'fill' ? 'mark' : 'fill') : tool;
+  const idx = +cell.dataset.idx;
+  fromState = state[idx];
+  targetState = nextStateFor(fromState, strokeTool);
+  dragging = true;
+  activePointerId = e.pointerId;
+  touchedRows.clear();
+  touchedCols.clear();
+  try { grid.setPointerCapture(e.pointerId); } catch (_) {}
+  setHover(+cell.dataset.r, +cell.dataset.c);
+  paintCell(cell);
+});
+
+grid.addEventListener('pointermove', (e) => {
+  const cell = cellFromPoint(e.clientX, e.clientY);
+  if (cell) setHover(+cell.dataset.r, +cell.dataset.c);
+  else if (!dragging) clearHover();
+  if (!dragging || e.pointerId !== activePointerId) return;
+  if (cell) paintCell(cell);
+});
+
+grid.addEventListener('pointerleave', () => { if (!dragging) clearHover(); });
+grid.addEventListener('pointerenter', (e) => {
+  const cell = cellFromPoint(e.clientX, e.clientY);
+  if (cell) setHover(+cell.dataset.r, +cell.dataset.c);
+});
+
+function endStroke(e) {
+  if (!dragging) return;
+  if (e && e.pointerId !== undefined && e.pointerId !== activePointerId) return;
+  dragging = false;
+  try { if (activePointerId !== null) grid.releasePointerCapture(activePointerId); } catch (_) {}
+  activePointerId = null;
+  for (const r of touchedRows) updateRowDone(r);
+  for (const c of touchedCols) updateColDone(c);
+  touchedRows.clear();
+  touchedCols.clear();
+  if (e && e.pointerType === 'touch') clearHover();
+  checkWin();
+  save();
+}
+grid.addEventListener('pointerup', endStroke);
+grid.addEventListener('pointercancel', endStroke);
+grid.addEventListener('lostpointercapture', endStroke);
+
+grid.addEventListener('contextmenu', (e) => e.preventDefault());
+
+function onClueClick(e) {
+  const span = e.target.closest('span');
+  if (!span) return;
+  if (span.parentElement.parentElement !== colCluesEl &&
+      span.parentElement.parentElement !== rowCluesEl) return;
+  span.classList.toggle('struck');
+  save();
+}
+colCluesEl.addEventListener('click', onClueClick);
+rowCluesEl.addEventListener('click', onClueClick);
+
+function setTool(t) {
+  tool = t;
+  toolFillBtn.classList.toggle('active', t === 'fill');
+  toolMarkBtn.classList.toggle('active', t === 'mark');
+  save();
+}
+toolFillBtn.addEventListener('click', () => setTool('fill'));
+toolMarkBtn.addEventListener('click', () => setTool('mark'));
+
+resetBtn.addEventListener('click', () => {
+  if (!confirm('Spielfeld zurücksetzen?')) return;
+  state.fill(0);
+  for (let i = 0; i < TOTAL; i++) {
+    const cell = grid.children[i];
+    cell.classList.remove('filled', 'marked');
+  }
+  for (let r = 0; r < N; r++) updateRowDone(r);
+  for (let c = 0; c < N; c++) updateColDone(c);
+  for (const s of colCluesEl.querySelectorAll('span.struck')) s.classList.remove('struck');
+  for (const s of rowCluesEl.querySelectorAll('span.struck')) s.classList.remove('struck');
+  board.classList.remove('won');
+  statusEl.textContent = '';
+  save();
+});
+
+const STORAGE_KEY = 'birthday-nonogram:v1';
+
+function save() {
+  try {
+    let cells = '';
+    for (let i = 0; i < TOTAL; i++) cells += state[i];
+    const rowStruck = [];
+    for (let r = 0; r < N; r++) {
+      const spans = rowCluesEl.children[r].children;
+      for (let i = 0; i < spans.length; i++) {
+        if (spans[i].classList.contains('struck')) rowStruck.push([r, i]);
+      }
+    }
+    const colStruck = [];
+    for (let c = 0; c < N; c++) {
+      const spans = colCluesEl.children[c].children;
+      for (let i = 0; i < spans.length; i++) {
+        if (spans[i].classList.contains('struck')) colStruck.push([c, i]);
+      }
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ cells, rowStruck, colStruck, tool }));
+  } catch (_) {}
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (typeof data.cells === 'string' && data.cells.length === TOTAL) {
+      for (let i = 0; i < TOTAL; i++) {
+        const v = data.cells.charCodeAt(i) - 48;
+        if (v >= 0 && v <= 2) applyState(i, v);
+      }
+    }
+    if (Array.isArray(data.rowStruck)) {
+      for (const [r, i] of data.rowStruck) {
+        const row = rowCluesEl.children[r];
+        if (row && row.children[i]) row.children[i].classList.add('struck');
+      }
+    }
+    if (Array.isArray(data.colStruck)) {
+      for (const [c, i] of data.colStruck) {
+        const col = colCluesEl.children[c];
+        if (col && col.children[i]) col.children[i].classList.add('struck');
+      }
+    }
+    if (data.tool === 'mark' || data.tool === 'fill') setTool(data.tool);
+  } catch (_) {}
+}
+
+buildClues();
+buildGrid();
+load();
+for (let r = 0; r < N; r++) updateRowDone(r);
+for (let c = 0; c < N; c++) updateColDone(c);
+checkWin();
+</script>
+</body>
+</html>
