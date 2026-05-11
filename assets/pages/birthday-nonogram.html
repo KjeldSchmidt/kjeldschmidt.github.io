@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="utf-8">
-<title>Birthday Nonogram</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="description" content="A 30x30 nonogram puzzle">
+<title>Geburtstags-Nonogramm</title>
+<meta name="viewport" content="width=1024">
+<meta name="description" content="Ein 30x30 Nonogramm-Rätsel">
 <style>
   html, body {
     background: #111;
@@ -126,7 +126,7 @@
     grid-template-rows: repeat(30, 1fr);
     aspect-ratio: 1;
     width: 100%;
-    touch-action: none;
+    touch-action: pinch-zoom;
     border-top: 1px solid #888;
     border-left: 1px solid #888;
     background: #1a1a1a;
@@ -196,12 +196,12 @@
 </head>
 <body>
 <div class="header">
-  <button id="tool-fill" class="active" type="button">Fill</button>
-  <button id="tool-mark" type="button">Mark X</button>
-  <button id="reset-btn" type="button">Reset</button>
+  <button id="tool-fill" class="active" type="button">Füllen</button>
+  <button id="tool-mark" type="button">Markieren</button>
+  <button id="reset-btn" type="button">Zurücksetzen</button>
   <span class="status" id="status"></span>
 </div>
-<div class="hint">Tap or swipe to paint. Pick a tool above. Right-click swaps tools for one stroke.</div>
+<div class="hint">Tippen oder wischen zum Malen. Werkzeug oben auswählen. Rechtsklick tauscht das Werkzeug für einen Strich.</div>
 
 <div class="board" id="board">
   <div class="corner"></div>
@@ -403,7 +403,7 @@ function checkWin() {
     }
   }
   board.classList.add('won');
-  statusEl.textContent = 'Solved!';
+  statusEl.textContent = 'Gelöst!';
 }
 
 let dragging = false;
@@ -501,7 +501,7 @@ toolFillBtn.addEventListener('click', () => setTool('fill'));
 toolMarkBtn.addEventListener('click', () => setTool('mark'));
 
 resetBtn.addEventListener('click', () => {
-  if (!confirm('Reset the board?')) return;
+  if (!confirm('Spielfeld zurücksetzen?')) return;
   state.fill(0);
   for (let i = 0; i < TOTAL; i++) {
     const cell = grid.children[i];
